@@ -27,17 +27,27 @@ def test_stream_events_used_when_no_result():
     assert (u.tokens_in, u.tokens_out, u.tokens_cached) == (300, 40, 50)
 
 
-def test_result_usage_preferred_when_nonzero():
-    res = json.dumps({"type": "result", "subtype": "success",
-                      "usage": {"input_tokens": 7, "output_tokens": 8, "cache_read_input_tokens": 9}})
-    u, result, _ = parse_stream("\n".join(LINES + [res]))
-    assert result["subtype"] == "success"
-    assert (u.tokens_in, u.tokens_out, u.tokens_cached) == (7, 8, 9)
+def _result(turn_usage, model_usage):
+    return json.dumps({"type": "result", "subtype": "success", "usage": turn_usage,
+                       "modelUsage": {"m": model_usage}})
 
 
-def test_zero_result_usage_falls_back_to_stream():
-    res = json.dumps({"type": "result", "subtype": "error_max_turns", "usage": ZERO})
-    u, _, _ = parse_stream("\n".join(LINES + [res]))
+def test_last_result_model_usage_is_cumulative_and_turn_usage_ignored():
+    # background-task turns emit extra result events; result.usage is per turn, modelUsage cumulative
+    r1 = _result({"input_tokens": 5, "output_tokens": 5},
+                 {"inputTokens": 1000, "outputTokens": 400, "cacheReadInputTokens": 9000})
+    r2 = _result({"input_tokens": 1, "output_tokens": 1},
+                 {"inputTokens": 1100, "outputTokens": 420, "cacheReadInputTokens": 9500,
+                  "cacheCreationInputTokens": 10})
+    u, result, _ = parse_stream("\n".join(LINES + [r1, r2]))
+    assert result["usage"]["input_tokens"] == 1
+    assert (u.tokens_in, u.tokens_out, u.tokens_cached) == (1110, 420, 9500)
+
+
+def test_stream_sum_wins_when_larger_than_last_result():
+    # killed after a result: later requests only appear in the stream events
+    r1 = _result(ZERO, {"inputTokens": 10, "outputTokens": 1, "cacheReadInputTokens": 0})
+    u, _, _ = parse_stream("\n".join([r1] + LINES))
     assert u.tokens_out == 40
 
 

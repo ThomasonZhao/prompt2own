@@ -35,11 +35,13 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
     """Parse `claude -p --output-format stream-json --verbose` output (Claude Code 2.1.x, as launched
     by the official harness). Returns (usage, result_event, cap_reason).
 
-    Usage, in order of preference: (1) the final `result` event's `usage` (session total) when non-zero;
-    (2) the sum over requests of the raw `stream_event` message_start/message_delta usage
-    (--include-partial-messages; needed via OpenRouter, where `assistant` events carry zeros, and when
-    the session was killed by timeout / token cap); (3) the sum of `assistant` usages de-duplicated by
-    message id. This function (with harness.StreamUsage) is the only place that knows these fields."""
+    Usage = the larger (by total tokens) of: (a) the LAST `result` event's `modelUsage`, which is
+    cumulative over the session (a session emits one `result` per turn, including extra turns triggered
+    by background tasks, and each `result.usage` covers only its own turn, so it must NOT be used);
+    (b) the sum over requests of raw `stream_event` message_start/message_delta usage
+    (--include-partial-messages), which also covers turns after the last result when the session is
+    killed. Fallback: `assistant` usages de-duplicated by message id (zeros via OpenRouter).
+    This function (with harness.StreamUsage) is the only place that knows these fields."""
     from .harness import StreamUsage
     per_msg: dict[str, dict] = {}
     meter = StreamUsage()
@@ -63,14 +65,28 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
             result = d
         elif t == "p2o_cap":
             cap = d.get("reason")
-    if result is not None and result.get("usage") and _to_usage(result["usage"]).total > 0:
-        return _to_usage(result["usage"]), result, cap
-    if meter.requests:            # killed / no result event: raw message_start + message_delta usage
-        return _to_usage(meter.summed()), result, cap
+    candidates = []
+    if result is not None and result.get("modelUsage"):
+        candidates.append(_model_usage(result["modelUsage"]))
+    if meter.requests:
+        candidates.append(_to_usage(meter.summed()))
+    if not candidates:
+        total = Usage()
+        for u in per_msg.values():
+            total = total + _to_usage(u)
+        candidates.append(total)
+    return max(candidates, key=lambda u: u.total), result, cap
+
+
+def _model_usage(mu: dict) -> Usage:
+    """`modelUsage` of a result event: cumulative over the whole session, per model."""
     total = Usage()
-    for u in per_msg.values():
-        total = total + _to_usage(u)
-    return total, result, cap
+    for v in mu.values():
+        total = total + Usage(
+            tokens_in=int(v.get("inputTokens", 0) or 0) + int(v.get("cacheCreationInputTokens", 0) or 0),
+            tokens_cached=int(v.get("cacheReadInputTokens", 0) or 0),
+            tokens_out=int(v.get("outputTokens", 0) or 0))
+    return total
 
 
 def parse_usage(stdout: str) -> Usage:
