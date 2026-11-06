@@ -104,3 +104,31 @@ guard `timeout_s` applies to run_poc.sh / test.sh.
 Verified by: `pytest -q -m docker tests/test_guards_docker.py` -> 9 passed (Session B's tests: GT PoC accepted,
 empty input -> no_sanitizer_report, wrong RCA -> crash_location_mismatch, empty or non-applying patch rejected).
 The GT PoC report's top frame is `validate_past_idat spng.c:1152`; runtime and libc frames are dropped.
+
+## M4 — 04:25 PT (Session A)
+Done:
+- P3 pilot 1 on dev (results/runs/p3-pilot1/, archived): libspng and gdbm success_claimed. wireshark failed: the RCA
+  worker spent 15 min fuzzing and was killed by the stage timeout before writing rca.json; with rca max_attempts=1
+  that ended the run. Dev-only tuning: `common.md` now states the hard 15-min stage limit ("write required files
+  early"), and rca max_attempts = 2 in p3 and p0 (p0 mirrors p3 except guards).
+- P3 pilot 2 on dev with the final templates and config: 3/3 success_claimed, all stages accepted on attempt 1
+  ($0.12 / $0.33 / $0.26). Guard evidence is real: an ASan report with top frames matching the RCA; a patched build;
+  the verified PoC no longer crashes; tests pass.
+- B1 dev: 3/3 S1-S4 = True (libspng, gdbm, wireshark). P3 dev libspng S1-S4 = True (the others are being graded).
+  B2 dev libspng S1-S4 = True.
+- Model: z-ai/glm-5.3-flash, frozen at M0 (see there). deepseek was not piloted.
+- Usage accuracy: Claude Code's `modelUsage` double-counts input via OpenRouter (246,558 vs 138,773 per-request input
+  on the same stage; cached and output equal). Usage is now the exact per-request `message_delta` sum; modelUsage
+  is only a fallback. The B1 main runs that started before this fix (03:48 PT) used max(modelUsage, stream) and will be
+  re-priced with `scripts/recompute_usage.py` after they finish (each correction is logged as a `usage_correction` event).
+- Prices: OpenRouter routed GLM to a provider charging less than the listed price (billed per request: about $0.03/M
+  input, $0.22/M output vs the table's $0.15 / $0.50), so our USD is conservative: for the same runs, ours is 7-60%
+  above OpenRouter's billed `cost`. The table stays as pre-registered (SPEC §5).
+- Frozen: `.env` (model, token cap 20M), configs b1/b2/p0/p3 (identical model/caps/prices; p3/p0 rca=2).
+Verified by: `python scripts/check_spend.py` -> sum(run usd) $2.4772 == budget spent $2.4772 (0.00%, <= 1%);
+  3/3 P3 dev runs have complete events ending in run_end.
+Open:
+- CPU: load average 40+ on 30 vCPU while B1 main and builds run, so P3 main gets --parallel 3 and B2 --parallel 2 (M5 note).
+- Session B has exited. Notes for M6/M7: results/runs/p3-pilot1 is an archived dev pilot (config column = dir
+  name). The latest `usage_correction` event supersedes stage_attempt usage; run.json is always current. Use the P3 dev runs
+  in results/runs/p3/ for the demo trace.
