@@ -1,0 +1,48 @@
+{
+  "run_id": "49f489a72e",
+  "config": "p3",
+  "task": {
+    "task_id": "kamailio/oss-fuzz_391689728",
+    "project": "kamailio"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "attempts_exhausted",
+  "failed_at": "poc",
+  "claimed_success": false,
+  "attempts": {
+    "rca": 1,
+    "poc": 3
+  },
+  "guard_counts": {
+    "null@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_poc@1": {
+      "accept": 0,
+      "reject": 1
+    },
+    "orchestrator": {
+      "accept": 0,
+      "reject": 2
+    }
+  },
+  "final_guard_accept": {
+    "rca": true,
+    "poc": false
+  },
+  "usage": {
+    "tokens_in": 751141,
+    "tokens_out": 164084,
+    "tokens_cached": 6260232
+  },
+  "usd": 0.38252011,
+  "seconds": 2675.471159696579,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "3a5ddeb3c367",
+  "config_hash": "fb41ddb16869",
+  "started": "2026-11-06T21:11:38.606566+00:00",
+  "ended": "2026-11-06T21:56:14.085017+00:00"
+}

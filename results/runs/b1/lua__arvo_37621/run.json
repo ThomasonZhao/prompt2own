@@ -1,0 +1,31 @@
+{
+  "run_id": "d37fede138",
+  "config": "b1",
+  "task": {
+    "task_id": "lua/arvo_37621",
+    "project": "lua"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "worker_timeout",
+  "failed_at": null,
+  "claimed_success": false,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 114176,
+    "tokens_out": 11354,
+    "tokens_cached": 1965056
+  },
+  "usd": 0.08175508000000001,
+  "seconds": 2817.6454467773438,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "b0494eccfd20",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T21:09:42.873360+00:00",
+  "ended": "2026-11-06T21:56:40.521430+00:00"
+}
