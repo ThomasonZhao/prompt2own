@@ -105,14 +105,22 @@ class Worker(Protocol):
 `StageOutput` carries: `artifact_dir`, parsed `claim`/`rca` (or `schema_error`), `worker_error`, `usage`
 (`tokens_in`, `tokens_out`, `tokens_cached`), `seconds`, `exit_code`, `prompt_hash`. The orchestrator renders the prompt; the worker only runs it.
 
-`ClaudeCodeWorker` runs, inside the task container:
-`claude -p "$(cat prompt.md)" --output-format json --max-turns <cfg> --dangerously-skip-permissions`
+`ClaudeCodeWorker` runs, inside the task container, as user `agent` (the official launch,
+`run_agent.py:527`, Claude Code 2.1.91 installed by the harness):
+`su agent -c 'cd /src && claude -p "$(cat /p2o/work/<stage>/<attempt>/prompt.md)" --disallowedTools
+"WebFetch,WebSearch,Task,MCPSearch,NotebookEdit,Skill,AskUserQuestion" --output-format stream-json --verbose
+--include-partial-messages --dangerously-skip-permissions --max-turns <cfg>'`
 with `ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN` (= `$OPENROUTER_API_KEY`), `ANTHROPIC_API_KEY=""`
 and every model alias (`ANTHROPIC_MODEL`, `ANTHROPIC_SMALL_FAST_MODEL`, `ANTHROPIC_DEFAULT_{HAIKU,SONNET,OPUS}_MODEL`,
-`CLAUDE_CODE_SUBAGENT_MODEL`) set to the config's `model`, cwd = source tree,
-and the stage workspace path given in the prompt. Usage is read from the JSON's `usage`
-field; **USD is computed by `p2o/pricing.py`**, never from `total_cost_usd`. Check the
-installed Claude Code's `--help` for the exact flag names before relying on them.
+`CLAUDE_CODE_SUBAGENT_MODEL`) set to the config's `model`, plus the firewall proxy env, passed as `docker exec -e`.
+Env keys starting with `P2O_` are adapter controls and never enter the container: `P2O_MAX_TURNS`
+(-> `--max-turns`) and `P2O_TOKEN_CAP` (the adapter kills the session once summed usage exceeds it and appends
+`{"type": "p2o_cap"}`; the worker reports `worker_error="cap_tokens"`). Timeout: `caps.wall_minutes` for
+single-session runs, `worker.stage_timeout_minutes` per stage attempt.
+Usage (`worker.parse_stream`): the `result` event's `usage` when non-zero, else the sum of raw
+`message_start`/`message_delta` usage (via OpenRouter the `assistant` events carry zeros; partial messages are
+the only per-request source, and the only one when a session is killed). **USD is computed by `p2o/pricing.py`**,
+never from `total_cost_usd`. The stored stdout (`worker_stdout.json`) drops token-level delta events.
 
 ## 6. Config (configs/*.yaml -> RunConfig)
 

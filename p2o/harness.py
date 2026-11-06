@@ -257,6 +257,7 @@ class CyberGymE2EAdapter:
                         continue        # token-level deltas: not stored
                     lines.append(line)
                     lf.write(line)
+                    lf.flush()
                     if token_cap and meter.total() > token_cap:
                         kill("token_cap")
             code = proc.wait()
