@@ -27,7 +27,7 @@
     "mosquitto/arvo_55886": "easy",
     "mruby/oss-fuzz_439494108": "easy",
     "zeek/arvo_55430": "easy",
-    "ffmpeg/oss-fuzz_377642312": "easy",
+    "libidn2/arvo_12420": "easy",
     "wolfmqtt/arvo_30181": "easy",
     "libarchive/arvo_38766": "easy",
     "htslib/arvo_18196": "easy",
@@ -107,11 +107,11 @@
       "stratum": "easy"
     },
     {
-      "task_id": "ffmpeg/oss-fuzz_377642312",
-      "project": "ffmpeg",
-      "build_image": "cybergym/oss-fuzz:377642312-fix",
+      "task_id": "libidn2/arvo_12420",
+      "project": "libidn2",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
       "fix_files": 1,
-      "fix_lines": 4,
+      "fix_lines": 12,
       "stratum": "easy"
     },
     {
@@ -487,6 +487,53 @@
       "stratum": "uniform"
     }
   ],
-  "replacements": [],
-  "build_minutes": {}
+  "replacements": [
+    {
+      "set": "main",
+      "replaced": "ffmpeg/oss-fuzz_377642312",
+      "reason": "E3: compile 19.89 min > 10.0",
+      "replacement": {
+        "task_id": "libidn2/arvo_12420",
+        "stratum": "easy"
+      },
+      "replacement_minutes": 0.62,
+      "replacement_ok": true
+    }
+  ],
+  "build_minutes": {
+    "libspng/arvo_14935": 0.04,
+    "wireshark/arvo_47624": 0.9,
+    "gdbm/arvo_38943": 0.21,
+    "mosquitto/arvo_55886": 0.4,
+    "mruby/oss-fuzz_439494108": 0.46,
+    "zeek/arvo_55430": 3.52,
+    "ffmpeg/oss-fuzz_377642312": 19.89,
+    "libidn2/arvo_12420": 0.62,
+    "wolfmqtt/arvo_30181": 1.36,
+    "libarchive/arvo_38766": 2.68,
+    "htslib/arvo_18196": 0.11,
+    "openexr/arvo_59070": 0.38,
+    "hiredis/arvo_28777": 0.04,
+    "assimp/arvo_49797": 0.61,
+    "kamailio/oss-fuzz_391689728": 1.36,
+    "lua/arvo_37621": 0.14,
+    "file/arvo_48736": 0.34,
+    "tinysparql/oss-fuzz_396460492": 1.28,
+    "bind9/arvo_63186": 0.79,
+    "botan/arvo_6581": 0.5,
+    "igraph/arvo_47947": 0.49,
+    "selinux/arvo_60670": 0.05,
+    "flac/oss-fuzz_42537169": 0.57,
+    "gpac/oss-fuzz_42537014": 0.33,
+    "matio/oss-fuzz_407185361": 1.02,
+    "mongoose/arvo_51757": 0.04,
+    "uwebsockets/arvo_28216": 0.44,
+    "libpcap/arvo_48863": 0.28,
+    "libgit2/arvo_11167": 0.1,
+    "libwebsockets/arvo_48959": 0.36,
+    "libaom/arvo_10574": 0.19,
+    "hostap/arvo_27269": 0.23,
+    "libjpeg-turbo/arvo_33340": 0.16,
+    "fluent-bit/arvo_26593": 1.46
+  }
 }

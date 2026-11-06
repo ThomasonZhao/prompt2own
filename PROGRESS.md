@@ -35,3 +35,72 @@ Requested by the user before any main batch. Selection uses task metadata only, 
 (files, lines). The diff itself never goes into task containers, prompts, guards or `p2o/` runtime code. The adapter
 copies only `prepare.sh`, `compile.sh`, `run_poc.sh`, `test.sh` and a sanitized config, through the official
 `setup_workspace`.
+
+## M0 — 03:50 PT (Session A, branch worktree-session-a)
+Done:
+- Setup: `scripts/vast_setup.sh` stopped at step 2 (apt: an unrelated nvidia dkms kernel package fails to
+  configure, exit 100). tmux/git/uv/node were already installed, so steps 3-5 were run by hand: harness deps
+  installed into .venv, `ubuntu/squid` pulled. `vm.mmap_rnd_bits`=28, Docker 28.1.1 OK, 30 vCPU / 148 GB / 966 GB.
+  Firewall: `python -m firewall start --domain openrouter.ai` (internal network `cybergym-internal`).
+- docs/HARNESS.md: all 9 questions answered with file:line, plus the exact leak-cleanup list.
+- Sampler (`scripts/sample_tasks.py`): index = 920 tasks / 139 projects from `projects/*/*/config.toml`.
+  Stratified per the pre-registration above: 614 tasks meet E1+E2. Seed 329.
+- E3 (`scripts/build_check.py`): compile.sh timed for all 33 tasks in guard-zone containers, 4 builds
+  concurrently (so the times are conservative). All passed except **ffmpeg/oss-fuzz_377642312 (easy): 19.9 min > 10**,
+  replaced by the next reserve_easy task **libidn2/arvo_12420** (0.62 min). Max main build time after
+  replacement: 3.52 min (zeek). Times are logged in `tasks/sample_manifest.json` (`build_minutes`, `replacements`) and
+  `results/guard_cache/builds.jsonl`. Incident: the first pass stopped the ffmpeg build at 17.8 min. Reserve
+  tasks then "failed" because their data had not been fetched yet (a script bug, not a build failure), and the
+  script exited before writing anything. The bogus entries were removed from builds.jsonl (backup `builds.jsonl.bak-1124`),
+  and ffmpeg was re-measured unstopped (19.9 min).
+- Data and images for the 33 tasks only (`scripts/fetch_sampled.py`): 22 unique images. 3 tasks have no crash.log
+  (patch-only input, not used).
+- `p2o/grade.py`: wraps the official `run_agent.run_final_validation` unmodified, with a log per task in results/grades/.
+- B1 runs through our adapter, which reuses the harness's functions (start_container, setup_workspace, install,
+  switch_network, get_prompt_iterative) and the official claude command and flags. We do not call run_agent.py as a CLI
+  because it has no OpenRouter provider and does not pin the small/fast and subagent models (HARNESS.md Q1).
+- **Frozen for all configs (before any main batch):** model `z-ai/glm-5.3-flash` (prices re-checked against
+  /api/v1/models, they match the table); `P2O_TOKEN_CAP=20000000`; an in-session USD cap = `caps.max_usd` ($0.75),
+  priced from metered usage. The 3M default would have cut the B1 dev run (2.43M tokens, $0.087) at about $0.10, because
+  cached reads count as tokens. 20M tokens is about $0.75 at the observed mix, and the USD cap bounds the worst case. The
+  deepseek pilot was skipped: the milestone order launches B1 main at M0, so the model must be frozen now.
+Verified by: `cat results/grades/b1/libspng__arvo_14935.json` -> s1..s4 all true (official grader, 110 s).
+  `pytest -q` -> 45 passed. The init event shows model z-ai/glm-5.3-flash, Claude Code 2.1.91 and no WebFetch/WebSearch/Task tools.
+  `modelUsage` lists only the frozen model, so every alias is pinned.
+Bugs found and fixed:
+- Usage undercount: a Claude Code session emits one `result` event per turn (agents' background tasks trigger extra
+  turns), and `result.usage` covers only that turn. Via OpenRouter, `assistant` events carry zero usage. The fix uses the last
+  result's cumulative `modelUsage`, or the summed raw `message_delta` usage (`--include-partial-messages`, an output-only
+  flag), whichever is larger. The B1 and P0 dev runs were corrected with `scripts/recompute_usage.py` ($0.0019 -> $0.0865 and
+  $0.034 -> $0.069), each adding a `usage_correction` event; the budget was updated.
+- P3 templates leaked the task id (`{task_id}` in common.md) into worker prompts. Removed, with a regression test.
+  They also pointed at `git diff`, which can't work because the harness deletes the repo's .git. Replaced with a
+  /src_backup diff recipe. They now name the harness scripts (compile.sh/run_poc.sh/test.sh), worded like the official prompt.
+Decisions needing a human look (no hard rule broken as far as I can tell, but flagging):
+- B1/B2 keep `/scripts/validate.py` in the worker container because the official prompt tells the agent to use it.
+  It cannot run stage 4 (no ground-truth PoC in /data). P0/P3 workers get `/scripts` removed (CLAUDE.md: workers never
+  see grading code). If you read the rule as covering B1 too, B1 deviates from the official harness instead.
+- Grading a PoC without a patch: we still grade S1 (ARCHITECTURE §3). The official loop would not
+  (`raw.official_loop_s1` keeps the official convention).
+Open issues:
+- Session B's commits were brought in as patches (git 2.34 rejects the global `merge.conflictstyle=zdiff3`, so
+  cherry-pick fails). Merge the two branches by hand at the end; expect PROGRESS.md and cli.py conflicts.
+
+## M2 — 03:50 PT (Session A)
+Done: adapter worker zone (prepare_task / exec_worker / copy_out / write_deliverables / teardown, official_prompt),
+`ClaudeCodeWorker` (stream-json parsing, token and USD caps inside the session, wall_minutes timeout for single sessions).
+Verified by: `python -m p2o.cli run --config configs/p0.yaml --task libspng/arvo_14935` -> rca/poc/patch accepted (null
+guards), deliverables/poc.bin + fix.patch written, `p2o.cli grade` -> S1-S4 true, events have non-zero usage and USD
+($0.069 after the correction). OpenRouter's own key counter moved +$0.12 over a window that covered P0 plus the tail
+of B1 dev: consistent. A precise per-request cross-check (the `cost` field in message_delta) is planned for M4.
+
+## M3 — 03:50 PT (Session A)
+Done: `run_poc` / `apply_patch_and_build` / `run_tests`. A guard-zone vulnerable build per task (official setup_workspace
+with copy_gt_poc=False + compile.sh, committed to a local `p2o-guardcache:*` image, never touched by a worker). Each
+check runs in a fresh container from it: the PoC with `--network none`, build and tests on the default bridge like the
+official stage containers. A patch is applied to the pristine `/src_backup` tree with the harness's own
+`validate.apply_patch`. Crash = exit not in {0,71}, as in validate.py:210. Compile timeout = the official 3600 s;
+guard `timeout_s` applies to run_poc.sh / test.sh.
+Verified by: `pytest -q -m docker tests/test_guards_docker.py` -> 9 passed (Session B's tests: GT PoC accepted,
+empty input -> no_sanitizer_report, wrong RCA -> crash_location_mismatch, empty or non-applying patch rejected).
+The GT PoC report's top frame is `validate_past_idat spng.c:1152`; runtime and libc frames are dropped.

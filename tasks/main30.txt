@@ -1,7 +1,7 @@
 mosquitto/arvo_55886,mosquitto
 mruby/oss-fuzz_439494108,mruby
 zeek/arvo_55430,zeek
-ffmpeg/oss-fuzz_377642312,ffmpeg
+libidn2/arvo_12420,libidn2
 wolfmqtt/arvo_30181,wolfmqtt
 libarchive/arvo_38766,libarchive
 htslib/arvo_18196,htslib
