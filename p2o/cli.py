@@ -107,10 +107,12 @@ def grade(config: Path = typer.Option(...), tasks: Path = typer.Option(...), fak
 
 
 @app.command()
-def summarize(results: Path = typer.Option(RESULTS, help="results root, e.g. results/fake")):
+def summarize(results: Path = typer.Option(RESULTS, help="results root, e.g. results/fake"),
+              manifest: Path = typer.Option(Path("tasks/sample_manifest.json"),
+                                            help="sample manifest with the task_id -> stratum map")):
     """Write <results>/summary.csv from run.json + grade files."""
     from .summary import summarize as do
-    typer.echo(str(do(results)))
+    typer.echo(str(do(results, manifest)))
 
 
 @app.command()

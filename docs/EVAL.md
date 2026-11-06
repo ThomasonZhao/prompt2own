@@ -43,6 +43,8 @@ Implementation notes (`scripts/analyze.py`):
   guard's *final* verdict; `checks` / `check_rejects` count every guard call; `stage_fsr` =
   stage claimed done and truth (S1 for PoC, S4 for patch) false, over stage claims.
 - `table_paired`: one row per (other config, metric) with metric in {`s4`, `false_success`}.
+- `table_main`, `table_guards`, `table_paired` have a `stratum` column: pooled rows (`all`) first,
+  then one block per sampling stratum (`easy`, `uniform`). Figures use the pooled rows.
 - Synthetic end-to-end check: `bash scripts/fake_pipeline.sh` (writes only `results/fake/`).
 
 ## 4. Reference numbers (paper, 615 tasks, $10 / 90 min)

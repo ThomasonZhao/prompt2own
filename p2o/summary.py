@@ -12,7 +12,16 @@ COLUMNS = ["config", "task_id", "project", "seed", "status", "stop_reason", "fai
            "tokens_cached", "minutes", "attempts_rca", "attempts_poc", "attempts_patch",
            "poc_guard_accepts", "poc_guard_rejects", "patch_guard_accepts", "patch_guard_rejects",
            "final_poc_guard_accept", "final_patch_guard_accept", "model", "provider",
-           "prompt_hash", "config_hash", "claimed_poc", "claimed_patch"]
+           "prompt_hash", "config_hash", "claimed_poc", "claimed_patch", "stratum"]
+
+MANIFEST = Path("tasks/sample_manifest.json")
+
+
+def load_strata(manifest: Path | None) -> dict[str, str]:
+    """task_id -> sampling stratum ("easy" | "uniform") from the sample manifest; {} if absent."""
+    if manifest is None or not Path(manifest).exists():
+        return {}
+    return dict(json.loads(Path(manifest).read_text()).get("stratum", {}))
 
 
 def _stage_claims(run_dir: Path) -> dict[str, int]:
@@ -28,7 +37,8 @@ def _guard(counts: dict, prefix: str, key: str) -> int:
     return sum(v[key] for g, v in counts.items() if g.startswith(prefix))
 
 
-def summarize(results_root: Path = Path("results")) -> Path:
+def summarize(results_root: Path = Path("results"), manifest: Path | None = MANIFEST) -> Path:
+    strata = load_strata(manifest)
     rows = []
     for run_json in sorted((results_root / "runs").glob("*/*/run.json")):
         r = json.loads(run_json.read_text())
@@ -57,6 +67,7 @@ def summarize(results_root: Path = Path("results")) -> Path:
             "model": r["model"], "provider": r["provider"], "prompt_hash": r["prompt_hash"],
             "config_hash": r["config_hash"],
             "claimed_poc": sc.get("poc", ""), "claimed_patch": sc.get("patch", ""),
+            "stratum": strata.get(r["task"]["task_id"], ""),
         })
     out = results_root / "summary.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
