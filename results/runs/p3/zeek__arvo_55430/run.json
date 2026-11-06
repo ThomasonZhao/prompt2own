@@ -1,0 +1,43 @@
+{
+  "run_id": "bdb03f4e0d",
+  "config": "p3",
+  "task": {
+    "task_id": "zeek/arvo_55430",
+    "project": "zeek"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "attempts_exhausted",
+  "failed_at": "poc",
+  "claimed_success": false,
+  "attempts": {
+    "rca": 1,
+    "poc": 3
+  },
+  "guard_counts": {
+    "null@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "orchestrator": {
+      "accept": 0,
+      "reject": 3
+    }
+  },
+  "final_guard_accept": {
+    "rca": true
+  },
+  "usage": {
+    "tokens_in": 657671,
+    "tokens_out": 201141,
+    "tokens_cached": 11721677
+  },
+  "usd": 0.55087146,
+  "seconds": 3033.6290361881256,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "3a5ddeb3c367",
+  "config_hash": "fb41ddb16869",
+  "started": "2026-11-06T20:05:05.940887+00:00",
+  "ended": "2026-11-06T20:55:39.573007+00:00"
+}
