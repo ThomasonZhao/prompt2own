@@ -1,0 +1,31 @@
+{
+  "run_id": "225fc3c134",
+  "config": "b1",
+  "task": {
+    "task_id": "fluent-bit/arvo_26593",
+    "project": "fluent-bit"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 79041,
+    "tokens_out": 2372,
+    "tokens_cached": 267392
+  },
+  "usd": 0.021063909999999998,
+  "seconds": 1030.2035567760468,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "ed53a98bbb30",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T22:32:50.500793+00:00",
+  "ended": "2026-11-06T22:50:00.991715+00:00"
+}
