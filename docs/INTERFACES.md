@@ -18,7 +18,19 @@ results/
   grades/<config_id>/<task_id>.json    # GradeRecord (grader only)
   summary.csv                          # one row per (config, task, seed)
   figs/                                # analyze.py outputs
+  fake/                                # same layout, for --fake runs only (own budget.json)
 ```
+
+Every CLI command takes `--results <root>` (default `results/`). `--fake` defaults to
+`results/fake/` and refuses the real root, so synthetic runs, grades and spend never mix
+with real ones. `run --fake` uses the fixed demo script (reject -> retry -> accept);
+`batch --fake` draws a deterministic random script per (config, task) (`p2o.fakes.varied_script`).
+
+`events.jsonl` `run_start` carries `config_hash` and `templates_hash` (hash of every file in
+the prompt dir); each `stage_attempt` carries the rendered prompt's `prompt_hash`.
+`RunRecord.claimed_success` is the PATCH stage's own last claim (`done`), never an earlier
+stage's; `final_guard_accept[stage]` is the stage guard's last verdict, ignoring
+orchestrator rejections (schema / worker errors) where no guard ran.
 
 ## 2. Stage outputs (what a worker must write in its workspace)
 

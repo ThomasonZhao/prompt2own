@@ -20,6 +20,15 @@ def prompt_hash(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()[:12]
 
 
+def templates_hash(prompt_dir: str | Path) -> str:
+    """Hash of every template file: shows whether templates changed between runs (rendered
+    prompts differ per task, so per-attempt prompt hashes cannot show that)."""
+    h = hashlib.sha256()
+    for f in sorted(Path(prompt_dir).glob("*.md")):
+        h.update(f.name.encode() + b"\0" + f.read_bytes() + b"\0")
+    return h.hexdigest()[:12]
+
+
 def load(prompt_dir: str | Path, name: str) -> str:
     return (Path(prompt_dir) / name).read_text()
 

@@ -3,11 +3,17 @@
 # STATUS: implemented
 FakeWorker follows a script: per (stage, attempt) what to write. FakeHarness's run_poc
 "crashes" iff the PoC bytes start with b"CRASH", and a patched build fixes it iff the
-patch text contains "FIX". Purely synthetic; for exercising control flow only.
+patch text contains "FIX", and its tests fail iff the patch contains "BREAKS".
+Purely synthetic; for exercising control flow and the analysis pipeline only.
+
+FakeWorker(vary=<salt>) draws a different script per (salt, task_id), deterministically,
+so `p2o.cli batch --fake` yields a mix of outcomes across configs and tasks.
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import random
 from pathlib import Path
 
 from .types import (BuildResult, PoCRun, Stage, StageOutput, Task, TestResult, Usage,
@@ -24,15 +30,48 @@ DEFAULT_SCRIPT = {
 }
 
 
+_FIX, _BREAKS = "--- a\n+++ b\n+FIX\n", "--- a\n+++ b\n+FIX BREAKS\n"
+_BADAPPLY, _NOFIX = "--- a\n+++ b\n+BADAPPLY\n", "--- a\n+++ b\n+nothing\n"
+
+
+def varied_script(salt: str, task_id: str) -> dict:
+    """A plausible random script for one (config, task): sometimes right, sometimes not."""
+    r = random.Random(hashlib.sha256(f"{salt}|{task_id}".encode()).digest())
+    good_rca = r.random() < 0.8
+    sc: dict = {("rca", 1): {"rca": {"file": "src/a.c" if good_rca else "src/other.c",
+                                     "function": "parse" if good_rca else "elsewhere",
+                                     "line_range": [1, 9], "bug_class": "heap-buffer-overflow",
+                                     "rationale": "fake"}}}
+    skill = r.random()                     # per-task difficulty: low = hard
+    for a in (1, 2, 3):
+        x = r.random()
+        if x < 0.05:
+            sc[("poc", a)] = {"raise": True}
+        else:
+            sc[("poc", a)] = {"poc": b"CRASH-in-parse" if x < 0.05 + 0.7 * skill else b"nope",
+                              "done": r.random() < 0.85}
+        y = r.random()
+        patch = (_FIX if y < 0.6 * skill else _BREAKS if y < 0.7 * skill + 0.05
+                 else _BADAPPLY if y < 0.8 * skill + 0.1 else _NOFIX)
+        sc[("patch", a)] = {"patch": patch, "done": r.random() < 0.85}
+    sc[("single", 1)] = {"poc": b"CRASH" if r.random() < 0.6 * skill + 0.1 else b"nope",
+                         "patch": _FIX if r.random() < 0.6 * skill else _NOFIX,
+                         "done": r.random() < 0.8}
+    return sc
+
+
 class FakeWorker:
-    def __init__(self, script: dict | None = None, done: bool = True, usage: Usage | None = None):
+    def __init__(self, script: dict | None = None, done: bool = True, usage: Usage | None = None,
+                 vary: str | None = None):
         self.script = script or DEFAULT_SCRIPT
+        self.vary = vary
         self.done, self.usage = done, usage or Usage(tokens_in=10_000, tokens_out=1_000, tokens_cached=50_000)
         self.calls: list[tuple[str, int, str]] = []
 
     def run(self, ws, stage: Stage, attempt: int, prompt: str, artifact_dir: Path, prompt_hash: str) -> StageOutput:
         self.calls.append((stage.value, attempt, prompt))
-        step = self.script.get((stage.value, attempt), {})
+        script = varied_script(self.vary, ws.task.task_id) if self.vary is not None else self.script
+        step = script.get((stage.value, attempt), {})
         artifact_dir.mkdir(parents=True, exist_ok=True)
         if step.get("raise"):
             return StageOutput(stage=stage, attempt=attempt, artifact_dir=artifact_dir,
@@ -92,7 +131,10 @@ class FakeHarness:
         text = Path(patch_path).read_text()
         if "BADAPPLY" in text:
             return BuildResult(ok=False, stage_failed="apply")
-        return BuildResult(ok=True, image_or_container="FIX" if "FIX" in text else "nofix")
+        tag = ("FIX" if "FIX" in text else "nofix") + ("+BREAKS" if "BREAKS" in text else "")
+        return BuildResult(ok=True, image_or_container=tag)
 
     def run_tests(self, task, build, timeout_s) -> TestResult:
+        if "BREAKS" in build.image_or_container:
+            return TestResult(ok=False, failed=1, log_tail="FAIL: test_fake")
         return TestResult(ok=True)
