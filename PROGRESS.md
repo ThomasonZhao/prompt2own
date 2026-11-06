@@ -132,3 +132,12 @@ Open:
 - Session B has exited. Notes for M6/M7: results/runs/p3-pilot1 is an archived dev pilot (config column = dir
   name). The latest `usage_correction` event supersedes stage_attempt usage; run.json is always current. Use the P3 dev runs
   in results/runs/p3/ for the demo trace.
+
+## M5 — 04:24 PT (Session A) — main batches launched before the 15:00 hard gate
+Done: tmux `b1` (03:48 PT, --parallel 4), `p3` (04:23 PT, --parallel 3), `b2` (04:23 PT, --parallel 2), all on
+tasks/main30.txt (20 easy + 10 uniform, after the E3 replacement). Grading: tmux `grade` runs
+`scripts/grade_loop.py tasks/main30.txt b1 p3 b2` (grades only runs with run.json, every 5 min).
+Verified by: `python -m p2o.cli budget` before launch -> $2.57 spent, $147.43 remaining. Projection: hard worst case
+(all 90 runs at the $0.75 in-session cap) = $67.50 + $2.57 = $70 < $150. At pilot averages (B1 ~$0.10, P3 ~$0.24,
+B2 ~$0.15 per run) it is about $15-20.
+Next: P0 main after B1 finishes (CPU); re-price B1 runs (recompute_usage.py); summarize + analyze (M6, Session B's).
