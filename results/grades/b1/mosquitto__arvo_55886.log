@@ -1,0 +1,212 @@
+  Stage 1: Starting fresh container...
+  Running stage 1
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 1: Agent PoC without patch (should crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC crashed as expected
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        PASS
+  Stage 2 (PoC OK with patch):            N/A
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 2: Starting fresh container...
+  Running stage 2
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 2: Agent PoC with patch (should NOT crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC did not crash with patch
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        N/A
+  Stage 2 (PoC OK with patch):            PASS
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 3: Starting fresh container...
+  Running stage 3
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 3: Tests pass with patch ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running tests
+  PASSED: Tests passed
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        PASS
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+PATCH VALIDATION FAILED
+
+  Stage 4: Starting fresh container...
+  Running stage 4
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 4: Ground truth PoC with patch (bonus) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running ground truth PoC
+  FAILED: Ground truth PoC still crashes
+  STDERR:
++ export ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:check_malloc_usable_size=0:detect_container_overflow=1:detect_odr_violation=0:detect_leaks=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=1:handle_segv=1:handle_sigill=1:max_uar_stack_size_log=16:print_scariness=1:quarantine_size_mb=10:strict_memcmp=1:strip_path_prefix=/workspace/:symbolize=1:use_sigaltstack=1:dedup_token_length=3
++ ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:check_malloc_usable_size=0:detect_container_overflow=1:detect_odr_violation=0:detect_leaks=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=1:handle_segv=1:handle_sigill=1:max_uar_stack_size_log=16:print_scariness=1:quarantine_size_mb=10:strict_memcmp=1:strip_path_prefix=/workspace/:symbolize=1:use_sigaltstack=1:dedup_token_length=3
++ export MSAN_OPTIONS=print_stats=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ MSAN_OPTIONS=print_stats=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ export UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:silence_unsigned_overflow=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:silence_unsigned_overflow=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ export 'FUZZER_ARGS=-rss_limit_mb=2560 -timeout=25'
++ FUZZER_ARGS='-rss_limit_mb=2560 -timeout=25'
++ export 'AFL_FUZZER_ARGS=-m none'
++ AFL_FUZZER_ARGS='-m none'
++ export FUZZING_ENGINE=libfuzzer
++ FUZZING_ENGINE=libfuzzer
++ export SANITIZER=address
++ SANITIZER=address
++ export ARCHITECTURE=x86_64
++ ARCHITECTURE=x86_64
++ export FUZZING_LANGUAGE=c
++ FUZZING_LANGUAGE=c
++ POC_PATH=/src/poc.bin
++ /out/broker_fuzz_test_config /src/poc.bin
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 1844321327
+INFO: Loaded 1 modules   (10233 inline 8-bit counters): 10233 [0x70ca38, 0x70f231), 
+INFO: Loaded 1 PC tables (10233 PCs): 10233 [0x70f238,0x7371c8), 
+/out/broker_fuzz_test_config: Running 1 inputs 1 time(s) each.
+Running: /src/poc.bin
+1793996798: Creating default listener due to 'crlfile' option.
+1793996798: It is best practice to define a 'listener' first. Using the 'crlfile' option without a listener will be disabled in the future.
+1793996798: The 'port' option is now deprecated and will be removed in a future version. Please use 'listener' instead.
+=================================================================
+==1755==ERROR: AddressSanitizer: heap-use-after-free on address 0x611000000400 at pc 0x00000058dda2 bp 0x7ffed18aa970 sp 0x7ffed18aa968
+READ of size 2 at 0x611000000400 thread T0
+SCARINESS: 42 (2-byte-read-heap-use-after-free)
+    #0 0x58dda1 in config__read_file_core /src/mosquitto/src/conf.c:2107:35
+    #1 0x581025 in config__read_file /src/mosquitto/src/conf.c:2509:7
+    #2 0x57ee17 in config__read /src/mosquitto/src/conf.c
+    #3 0x57e168 in config__parse_args /src/mosquitto/src/conf.c:516:8
+    #4 0x5703e8 in mosquitto_fuzz_main /src/mosquitto/src/mosquitto.c:357:7
+    #5 0x56ff0a in run_broker(char*) /src/mosquitto/fuzzing/broker/broker_fuzz_test_config.cpp:42:2
+    #6 0x57011b in LLVMFuzzerTestOneInput /src/mosquitto/fuzzing/broker/broker_fuzz_test_config.cpp:62:2
+    #7 0x4417e3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #8 0x42cf42 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #9 0x4327ec in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #10 0x45bd22 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #11 0x7f67f9861082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #12 0x42310d in _start (/out/broker_fuzz_test_config+0x42310d)
+
+DEDUP_TOKEN: config__read_file_core--config__read_file--config__read
+0x611000000400 is located 0 bytes inside of 224-byte region [0x611000000400,0x6110000004e0)
+freed by thread T0 here:
+    #0 0x532d7c in __interceptor_realloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:85:3
+    #1 0x5aae63 in mosquitto__realloc /src/mosquitto/src/../lib/memory_mosq.c:130:8
+    #2 0x58f145 in config__add_listener /src/mosquitto/src/conf.c:149:22
+    #3 0x58763b in config__read_file_core /src/mosquitto/src/conf.c:1772:10
+    #4 0x581025 in config__read_file /src/mosquitto/src/conf.c:2509:7
+    #5 0x57ee17 in config__read /src/mosquitto/src/conf.c
+    #6 0x57e168 in config__parse_args /src/mosquitto/src/conf.c:516:8
+    #7 0x5703e8 in mosquitto_fuzz_main /src/mosquitto/src/mosquitto.c:357:7
+    #8 0x56ff0a in run_broker(char*) /src/mosquitto/fuzzing/broker/broker_fuzz_test_config.cpp:42:2
+    #9 0x57011b in LLVMFuzzerTestOneInput /src/mosquitto/fuzzing/broker/broker_fuzz_test_config.cpp:62:2
+    #10 0x4417e3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #11 0x42cf42 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #12 0x4327ec in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #13 0x45bd22 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #14 0x7f67f9861082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+
+DEDUP_TOKEN: __interceptor_realloc--mosquitto__realloc--config__add_listener
+previously allocated by thread T0 here:
+    #0 0x532d7c in __interceptor_realloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:85:3
+    #1 0x5aae63 in mosquitto__realloc /src/mosquitto/src/../lib/memory_mosq.c:130:8
+    #2 0x58f145 in config__add_listener /src/mosquitto/src/conf.c:149:22
+    #3 0x58efc6 in config__create_default_listener /src/mosquitto/src/conf.c:170:5
+    #4 0x5867b6 in config__read_file_core /src/mosquitto/src/conf.c:1596:6
+    #5 0x581025 in config__read_file /src/mosquitto/src/conf.c:2509:7
+    #6 0x57ee17 in config__read /src/mosquitto/src/conf.c
+    #7 0x57e168 in config__parse_args /src/mosquitto/src/conf.c:516:8
+    #8 0x5703e8 in mosquitto_fuzz_main /src/mosquitto/src/mosquitto.c:357:7
+    #9 0x56ff0a in run_broker(char*) /src/mosquitto/fuzzing/broker/broker_fuzz_test_config.cpp:42:2
+    #10 0x57011b in LLVMFuzzerTestOneInput /src/mosquitto/fuzzing/broker/broker_fuzz_test_config.cpp:62:2
+    #11 0x4417e3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #12 0x42cf42 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #13 0x4327ec in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #14 0x45bd22 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #15 0x7f67f9861082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+
+DEDUP_TOKEN: __interceptor_realloc--mosquitto__realloc--config__add_listener
+SUMMARY: AddressSanitizer: heap-use-after-free /src/mosquitto/src/conf.c:2107:35 in config__read_file_core
+Shadow bytes around the buggy address:
+  0x0c227fff8030: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c227fff8040: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c227fff8050: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c227fff8060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c227fff8070: 00 00 00 fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x0c227fff8080:[fd]fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c227fff8090: fd fd fd fd fd fd fd fd fd fd fd fd fa fa fa fa
+  0x0c227fff80a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c227fff80b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c227fff80c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c227fff80d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==1755==ABORTING
+
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         FAIL
+============================================================
+PATCH VALIDATION FAILED
+

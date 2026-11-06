@@ -1,0 +1,31 @@
+{
+  "run_id": "9510cfadcb",
+  "config": "b1",
+  "task": {
+    "task_id": "libidn2/arvo_12420",
+    "project": "libidn2"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 190036,
+    "tokens_out": 84443,
+    "tokens_cached": 2679461
+  },
+  "usd": 0.15111072999999997,
+  "seconds": 1393.5881834030151,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "46ca217b0181",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T20:05:05.940995+00:00",
+  "ended": "2026-11-06T20:28:19.536417+00:00"
+}
