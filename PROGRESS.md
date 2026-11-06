@@ -35,3 +35,24 @@ Open issues (for Session A / later):
   Negligible at $150 but keep >= $3 headroom before launching a batch.
 - `p2o/grade.py` fake grading sets s3 = s4 = s2, so check-pass gap is always 0 on fake data
   (grade.py is Session A's file; not changed). Unit tests cover the gap metric directly.
+
+## M6 — 03:25 PT (Session B) — built and verified on fake data; rerun on real data after M5
+Done:
+- `scripts/analyze.py` rewritten; one command writes all 8 EVAL §3 files: table_main.{csv,tex},
+  fig_funnel.pdf, table_guards.{csv,tex}, table_paired.csv, fig_retries.pdf, failures.md.
+  Wilson CI on every rate; ungraded runs excluded and counted (were silently scored 0);
+  default task filter `tasks/main30.txt` (keeps M4 dev pilots out); mixed config_hash/model warnings;
+  guard table with false accepts/rejects and P3 stage FSR; paired McNemar on S4 and false success.
+- `summary.csv` gains `claimed_poc`, `claimed_patch` (from events.jsonl) for stage FSR (INTERFACES §7 updated).
+- **Bug fixed in `p2o/budget.py`:** `record` rewrote budget.json in place while `can_start` read it
+  without the lock; under `batch --parallel 4` runs crashed with JSONDecodeError at start (25/30
+  fake P3 runs lost on the first try). Now atomic write (tmp + os.replace, fsync) and locked reads.
+  This would have hit the real B1/P3 batches too. Session A: pull this before M5.
+- `scripts/fake_pipeline.sh`: 30 synthetic tasks x {b1,b2,p0,p3} -> grade -> summarize -> analyze, in results/fake/.
+- Tests: `tests/test_analyze.py` (hand-computed guard precision/recall/stage FSR, paired counts +
+  exact McNemar p, exclusions, task filter, one-command regeneration), `tests/test_budget.py` (16 threads).
+Verified by: `pytest -q` -> 34 passed. `bash scripts/fake_pipeline.sh` -> 120/120 runs, all 8 files.
+  Hand check: recomputed n / S4 / claimed / FSR / PoC-guard precision for b1 and p3 directly from
+  run.json + grade files (not summary.csv): identical to table_main / table_guards. Figures inspected as PNG.
+Open: real-data run of analyze after M5 (`python -m p2o.cli summarize && python scripts/analyze.py
+  results/summary.csv --out results/figs/`). Fake grader has s3 = s4, so check-pass gap is 0 on fake data.
