@@ -141,3 +141,41 @@ Verified by: `python -m p2o.cli budget` before launch -> $2.57 spent, $147.43 re
 (all 90 runs at the $0.75 in-session cap) = $67.50 + $2.57 = $70 < $150. At pilot averages (B1 ~$0.10, P3 ~$0.24,
 B2 ~$0.15 per run) it is about $15-20.
 Next: P0 main after B1 finishes (CPU); re-price B1 runs (recompute_usage.py); summarize + analyze (M6, Session B's).
+
+## Recovery — 2026-11-06 12:25 PT (Session A, branch worktree-session-a)
+The previous VM went offline at an unknown time after M5. Every run, grade, budget and guard-cache file on it was lost
+(results/ was never pushed). The main batches restart from scratch on a new host. Code, configs, templates, model, caps,
+prices, tasks/*.txt and sample_manifest.json are unchanged since def8162. `git diff def8162 -- configs p2o tasks` is empty.
+New host: 61 vCPU / 197 GB RAM / 497 GB disk, Ubuntu 22.04 VM, kernel 6.8.0-59, Docker 28.1.1, `vm.mmap_rnd_bits`=28.
+Done:
+- `scripts/vast_setup.sh`: apt succeeded this time. The script stopped at step 4: `uv venv` picked Python 3.15, and pytest
+  ran before step 5 installs tomli. Fixed by hand: `.venv` recreated on Python 3.11 (project convention), harness deps
+  installed, harness cloned at the same commit d0ae0f0, squid pulled. Host Claude Code is 2.1.319, but workers still get
+  2.1.91 through the harness's own install. `pytest -q` -> 45 passed.
+  Firewall: `python -m firewall start --domain openrouter.ai` (cybergym-internal).
+- Data: `scripts/fetch_sampled.py --tasks <the 33 ids in tasks/dev.txt + tasks/main30.txt>` (data plus images only).
+- Guard cache: rebuilt by calling `build_check.check()` directly for the 33 frozen tasks, 8 concurrently. This skips
+  build_check's replacement loop and its manifest / tasks/*.txt rewrite. Log: logs/rebuild_frozen.log. **All 33 built,
+  no failures, no replacements.** Times are 2-5x the M0 times (8 builds in parallel, load average up to ~110).
+  Max easy time 5.86 min (libarchive), so all easy tasks still meet E3 (<= 10 min). The manifest's build_minutes keep
+  the original M0 values.
+- Budget: results/budget.json was lost, and the new one started at $0. OpenRouter's key counter at recovery start =
+  **$11.94 actually billed** (logs/openrouter_usage.jsonl), which covers the dev pilots plus the lost main runs. Our table
+  priced 7-60% above OpenRouter's billed cost (M4), so the ledger carries `lost_prior_vm_estimate` = $11.94 x 1.6 =
+  **$19.10**. check_spend.py's sum(run usd) == budget check is therefore off by exactly that amount from now on.
+- Smoke: P3 on libspng/arvo_14935 (dev): success_claimed, $0.330, 30.9 min. RCA attempt 1 was rejected
+  (`schema_error: missing rca.json`): the worker fuzzed until the 15-min stage limit while the guard builds held load at
+  ~100. RCA attempt 2, PoC and patch were all accepted on the first try. Official grade S1-S4 = PASS (175 s).
+  config_hash fb41ddb16869, templates_hash 9d83d8024cc9.
+- `scripts/sync_results.sh` (new): every 15 min it copies results/runs/**/{run.json,events.jsonl,ledger.jsonl},
+  results/grades/** and results/summary.csv into a worktree at ../prompt2own-results on branch `results`, force-adds,
+  commits, and pushes only `refs/heads/results`. It runs in tmux session `p2o`, window `sync` (logs/sync.log).
+  The first push (b10ba71) was verified.
+- Main batches (tmux session `p2o`), launched 12:05 PT after `p2o.cli budget` showed $130.57 remaining (worst case for
+  b1+p3+b2 = $67.50): window `b1` (--parallel 4), `p3` (--parallel 3), `grade` (`scripts/grade_loop.py
+  tasks/main30.txt b1 p3`). P0 skipped for this recovery.
+- B2 not launched yet: once workers start compiling and fuzzing, load is 25-114, and the 5-min average holds at 30-44,
+  above the ~28 threshold. I re-check it as batches progress.
+Differences from the original M5 run: new host (2x vCPU); all main runs restart from scratch; the B1 runs now use the
+per-request usage fix from the start, so no B1 re-pricing is needed; no P0 main; B2 is conditional on load.
+Open: B2 launch decision; the main batches must finish before the 20:00 PT results deadline.
