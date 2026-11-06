@@ -23,6 +23,7 @@ from .types import (STAGE_ORDER, Fact, GuardInput, RunRecord, Stage, StageOutput
 from .worker import Worker
 
 CONTAINER_WORK = "/p2o/work"
+ORCHESTRATOR = "orchestrator"   # Verdict.guard for rejections made before any guard runs
 
 
 class Orchestrator:
@@ -68,7 +69,8 @@ class Orchestrator:
                         provider=self.cfg.provider, config_hash=self.cfg.hash, started=now())
         log = EventLog(d, {"run_id": rec.run_id, "config": self.cfg.id, "task_id": task.task_id,
                            "seed": self.cfg.seed, "model": self.cfg.model, "provider": self.cfg.provider})
-        log.emit("run_start", config_hash=self.cfg.hash)
+        log.emit("run_start", config_hash=self.cfg.hash,
+                 templates_hash=prompts.templates_hash(self.cfg.prompts.dir))
         t0 = time.time()
         try:
             ws = self.h.prepare_task(task, d)
@@ -91,7 +93,7 @@ class Orchestrator:
     def _run_graph(self, task, ws, d: Path, rec: RunRecord, log: EventLog, t0: float) -> None:
         ledger = Ledger(d)
         best: dict[Stage, Path] = {}
-        last_claim = None
+        claims: dict[Stage, object] = {}   # stage -> last parsed claim of that stage
         for stage in STAGE_ORDER:
             sc = self.cfg.stages[stage.value]
             guard = self.guards[stage.value]
@@ -103,7 +105,7 @@ class Orchestrator:
                     log.emit("cap_hit", stage=stage.value, cap=cap)
                     rec.status, rec.stop_reason, rec.failed_at = "cap_hit", cap, stage
                     self._deliver(ws, best)
-                    rec.claimed_success = bool(last_claim and last_claim.done and stage == Stage.PATCH)
+                    rec.claimed_success = self._patch_claimed(claims)
                     return
                 art = d / "work" / stage.value / str(attempt)
                 art.mkdir(parents=True, exist_ok=True)
@@ -121,9 +123,10 @@ class Orchestrator:
                 rec.attempts[stage.value] = attempt
                 g = rec.guard_counts.setdefault(verdict.guard, {"accept": 0, "reject": 0})
                 g["accept" if verdict.accept else "reject"] += 1
-                rec.final_guard_accept[stage.value] = verdict.accept
+                if verdict.guard != ORCHESTRATOR:   # only verdicts of the stage's own guard
+                    rec.final_guard_accept[stage.value] = verdict.accept
                 if out.claim is not None:
-                    last_claim = out.claim
+                    claims[stage] = out.claim
                 log.emit("stage_attempt", stage=stage.value, attempt=attempt, prompt_hash=ph,
                          claim=out.claim.model_dump() if out.claim else None,
                          schema_error=out.schema_error, worker_error=out.worker_error,
@@ -146,19 +149,25 @@ class Orchestrator:
                 reason = verdict.reason
             if not accepted:
                 rec.status, rec.stop_reason, rec.failed_at = "failed", "attempts_exhausted", stage
-                rec.claimed_success = bool(last_claim and last_claim.done and stage == Stage.PATCH)
+                rec.claimed_success = self._patch_claimed(claims)
                 self._deliver(ws, best)
                 return
-        rec.claimed_success = bool(last_claim and last_claim.done)
+        rec.claimed_success = self._patch_claimed(claims)
         rec.status = "success_claimed" if rec.claimed_success else "failed"
         rec.stop_reason = "completed"
         self._deliver(ws, best)
 
+    @staticmethod
+    def _patch_claimed(claims: dict) -> bool:
+        # claimed_success = the PATCH stage's own last claim, never an earlier stage's (FSR input)
+        c = claims.get(Stage.PATCH)
+        return bool(c and c.done)
+
     def _judge(self, task, stage, attempt, out: StageOutput, guard, ledger: Ledger) -> Verdict:
         if out.worker_error:
-            return Verdict(accept=False, reason=out.worker_error, guard="orchestrator")
+            return Verdict(accept=False, reason=out.worker_error, guard=ORCHESTRATOR)
         if out.schema_error or out.claim is None:
-            return Verdict(accept=False, reason=out.schema_error or "schema_error: no claim", guard="orchestrator")
+            return Verdict(accept=False, reason=out.schema_error or "schema_error: no claim", guard=ORCHESTRATOR)
         facts = ledger.facts()
         inp = GuardInput(task=task, stage=stage, attempt=attempt, artifact_dir=out.artifact_dir,
                          claim=out.claim, facts=facts)

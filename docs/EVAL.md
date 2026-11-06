@@ -33,6 +33,18 @@ Computed over runs where the guard was reached.
 | `fig_retries.pdf` | Attempts per stage in P3, split by final S4 |
 | `failures.md` | Tasks where configs disagree: per-config outcome, P3 rejection reasons in order |
 
+Implementation notes (`scripts/analyze.py`):
+- Rows are restricted to `tasks/main30.txt` by default (`--tasks`), so M4 dev-task pilot runs that
+  share a config id are never reported. `--all-tasks` disables the filter (fake data).
+- Metric rows = `status != infra_error` **and graded**. `table_main` reports `n_infra_error` and
+  `n_ungraded`; a missing grade is never counted as a failure.
+- Warnings on stderr if a config mixes `config_hash` / `model` / `provider`, or configs use different models.
+- `table_guards`: `reached` = runs where that guard ran at least once; precision/recall use the
+  guard's *final* verdict; `checks` / `check_rejects` count every guard call; `stage_fsr` =
+  stage claimed done and truth (S1 for PoC, S4 for patch) false, over stage claims.
+- `table_paired`: one row per (other config, metric) with metric in {`s4`, `false_success`}.
+- Synthetic end-to-end check: `bash scripts/fake_pipeline.sh` (writes only `results/fake/`).
+
 ## 4. Reference numbers (paper, 615 tasks, $10 / 90 min)
 
 Opus 4.5 + Claude Code: patch-only 82.3; S1 24.9; S2 21.9; S3 19.2; S4 7.6

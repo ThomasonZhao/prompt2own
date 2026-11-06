@@ -5,12 +5,23 @@ import csv
 import json
 from pathlib import Path
 
+from .ledger import read_jsonl
+
 COLUMNS = ["config", "task_id", "project", "seed", "status", "stop_reason", "failed_at",
            "claimed_success", "s1", "s2", "s3", "s4", "usd", "tokens_in", "tokens_out",
            "tokens_cached", "minutes", "attempts_rca", "attempts_poc", "attempts_patch",
            "poc_guard_accepts", "poc_guard_rejects", "patch_guard_accepts", "patch_guard_rejects",
            "final_poc_guard_accept", "final_patch_guard_accept", "model", "provider",
-           "prompt_hash", "config_hash"]
+           "prompt_hash", "config_hash", "claimed_poc", "claimed_patch"]
+
+
+def _stage_claims(run_dir: Path) -> dict[str, int]:
+    """Last parsed claim `done` per stage, from events.jsonl (Stage FSR in EVAL.md)."""
+    out: dict[str, int] = {}
+    for e in read_jsonl(run_dir / "events.jsonl"):
+        if e.get("event") == "stage_attempt" and e.get("claim") is not None:
+            out[e["stage"]] = int(bool(e["claim"].get("done")))
+    return out
 
 
 def _guard(counts: dict, prefix: str, key: str) -> int:
@@ -26,6 +37,7 @@ def summarize(results_root: Path = Path("results")) -> Path:
         g = json.loads(gpath.read_text()) if gpath.exists() else {}
         gc, fa = r.get("guard_counts", {}), r.get("final_guard_accept", {})
         u = r.get("usage", {})
+        sc = _stage_claims(run_json.parent)
         rows.append({
             "config": cfg, "task_id": r["task"]["task_id"], "project": r["task"].get("project", ""),
             "seed": r["seed"], "status": r["status"], "stop_reason": r["stop_reason"],
@@ -44,6 +56,7 @@ def summarize(results_root: Path = Path("results")) -> Path:
             "final_patch_guard_accept": "" if "patch" not in fa else int(fa["patch"]),
             "model": r["model"], "provider": r["provider"], "prompt_hash": r["prompt_hash"],
             "config_hash": r["config_hash"],
+            "claimed_poc": sc.get("poc", ""), "claimed_patch": sc.get("patch", ""),
         })
     out = results_root / "summary.csv"
     out.parent.mkdir(parents=True, exist_ok=True)

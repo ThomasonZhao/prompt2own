@@ -29,8 +29,21 @@ class Budget:
         self.path = Path(path) if path is not None else Path(os.environ.get("P2O_BUDGET_FILE", DEFAULT_PATH))
         self.total = total_usd if total_usd is not None else float(os.environ.get("P2O_BUDGET_USD", TOTAL_USD))
 
-    def _read(self) -> dict:
+    def _read_unlocked(self) -> dict:
         return json.loads(self.path.read_text()) if self.path.exists() else {"spent": 0.0, "by_config": {}}
+
+    def _read(self) -> dict:
+        with _locked(self.path):
+            return self._read_unlocked()
+
+    def _write_unlocked(self, d: dict) -> None:
+        # atomic: readers never see a truncated file, a crash never loses the previous total
+        tmp = self.path.with_name(f".{self.path.name}.{os.getpid()}.tmp")
+        with open(tmp, "w") as f:
+            f.write(json.dumps(d, indent=2))
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, self.path)
 
     def spent(self) -> float:
         return self._read()["spent"]
@@ -43,12 +56,12 @@ class Budget:
 
     def record(self, config_id: str, usd: float) -> None:
         with _locked(self.path):
-            d = self._read()
+            d = self._read_unlocked()
             d["spent"] += usd
             d["by_config"][config_id] = d["by_config"].get(config_id, 0.0) + usd
-            self.path.write_text(json.dumps(d, indent=2))
+            self._write_unlocked(d)
 
     def report(self) -> str:
         d = self._read()
         rows = "\n".join(f"  {k}: ${v:.2f}" for k, v in sorted(d["by_config"].items()))
-        return f"spent ${d['spent']:.2f} of ${self.total:.2f} (remaining ${self.remaining():.2f})\n{rows}"
+        return f"spent ${d['spent']:.2f} of ${self.total:.2f} (remaining ${self.total - d['spent']:.2f})\n{rows}"
