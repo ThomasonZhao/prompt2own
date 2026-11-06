@@ -146,6 +146,7 @@ class CyberGymE2EAdapter:
         self.use_firewall = use_firewall
         self.u, self.ra = _import_harness(self.harness_root)
         self.scripts_dir = (self.harness_root / "scripts").resolve()
+        self._built: dict[str, list[str]] = {}
 
     # ------------------------------------------------------------------ task metadata
     def script_path(self, task: Task) -> Path:
@@ -305,6 +306,12 @@ class CyberGymE2EAdapter:
     def teardown(self, ws: Workspace) -> None:
         if ws.container_id:
             self.u.cleanup_container(ws.container_id)
+        # patched-build images made by guards for this task's run (multi-GB each); the per-task
+        # vulnerable guard cache image is kept for reuse across configs
+        with self._locks_guard:
+            tags = self._built.pop(ws.task.task_id, [])
+        if tags:
+            subprocess.run(["docker", "rmi", "-f", *tags], capture_output=True)
 
     # ------------------------------------------------------------------ guard zone (M3)
     # Guards never touch the worker's container. The vulnerable build is made ONCE per task by the
@@ -427,6 +434,8 @@ class CyberGymE2EAdapter:
                                    seconds=time.time() - t0)
             tag = f"p2o-guardbuild:{uuid.uuid4().hex[:12]}"
             self._commit(cid, tag)
+            with self._locks_guard:
+                self._built.setdefault(task.task_id, []).append(tag)   # removed in teardown()
             return BuildResult(ok=True, image_or_container=tag, log_tail=(out + err)[-500:], seconds=time.time() - t0)
         finally:
             self.u.cleanup_container(cid)
