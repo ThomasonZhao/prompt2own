@@ -50,7 +50,9 @@ def _make(config: Path, fake: bool, root: Path, vary: bool = False):
     else:
         from .harness import CyberGymE2EAdapter
         from .worker import ClaudeCodeWorker
-        h = CyberGymE2EAdapter()
+        single = cfg.mode == "single_session"
+        # B1/B2 use the official prompt: it references /scripts/validate.py and /output/*.
+        h = CyberGymE2EAdapter(official_validator=single, official_outputs=single)
         w = ClaudeCodeWorker(h, cfg)
     return Orchestrator(cfg, h, w, root, _budget(root))
 
@@ -84,17 +86,24 @@ def batch(config: Path = typer.Option(...), tasks: Path = typer.Option(...),
 
 @app.command()
 def grade(config: Path = typer.Option(...), tasks: Path = typer.Option(...), fake: bool = False,
-          results: Path = ResultsOpt):
+          results: Path = ResultsOpt, parallel: int = 1):
     """Grade finished runs with the official grader."""
+    from concurrent.futures import ProcessPoolExecutor
     from .grade import grade as do_grade
     cfg = load_config(config)
     root = _root(results, fake)
-    for t in _tasks(tasks):
-        try:
-            g = do_grade(root, cfg.id, t, fake=fake)
-            typer.echo(f"{t.task_id}: S1={g.s1} S2={g.s2} S3={g.s3} S4={g.s4}")
-        except FileNotFoundError as e:
-            typer.echo(f"skip {t.task_id}: {e}")
+    # processes, not threads: each official grading run redirects its own stdout to a log file
+    with ProcessPoolExecutor(max_workers=max(1, parallel)) as ex:
+        futs = {ex.submit(do_grade, root, cfg.id, t, fake): t for t in _tasks(tasks)}
+        for f in as_completed(futs):
+            t = futs[f]
+            try:
+                g = f.result()
+                typer.echo(f"{t.task_id}: S1={g.s1} S2={g.s2} S3={g.s3} S4={g.s4}")
+            except FileNotFoundError as e:
+                typer.echo(f"skip {t.task_id}: {e}")
+            except Exception as e:
+                typer.echo(f"[grade error] {t.task_id}: {type(e).__name__}: {str(e)[:200]}")
 
 
 @app.command()

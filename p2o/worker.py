@@ -35,11 +35,14 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
     """Parse `claude -p --output-format stream-json --verbose` output (Claude Code 2.1.x, as launched
     by the official harness). Returns (usage, result_event, cap_reason).
 
-    Usage: the final `result` event's `usage` (session total) when present; otherwise (session killed
-    by timeout / token cap) the sum of per-request `assistant` usages, de-duplicated by message id
-    (one API response is streamed as several assistant events sharing an id). This function is the
-    only place that knows these field names."""
+    Usage, in order of preference: (1) the final `result` event's `usage` (session total) when non-zero;
+    (2) the sum over requests of the raw `stream_event` message_start/message_delta usage
+    (--include-partial-messages; needed via OpenRouter, where `assistant` events carry zeros, and when
+    the session was killed by timeout / token cap); (3) the sum of `assistant` usages de-duplicated by
+    message id. This function (with harness.StreamUsage) is the only place that knows these fields."""
+    from .harness import StreamUsage
     per_msg: dict[str, dict] = {}
+    meter = StreamUsage()
     result, cap = None, None
     for i, line in enumerate(stdout.splitlines()):
         line = line.strip()
@@ -50,7 +53,9 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
         except json.JSONDecodeError:
             continue
         t = d.get("type")
-        if t == "assistant":
+        if t == "stream_event":
+            meter.feed(line)
+        elif t == "assistant":
             msg = d.get("message") or {}
             if msg.get("usage"):
                 per_msg[msg.get("id") or f"_{i}"] = msg["usage"]
@@ -58,8 +63,10 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
             result = d
         elif t == "p2o_cap":
             cap = d.get("reason")
-    if result is not None and result.get("usage"):
+    if result is not None and result.get("usage") and _to_usage(result["usage"]).total > 0:
         return _to_usage(result["usage"]), result, cap
+    if meter.requests:            # killed / no result event: raw message_start + message_delta usage
+        return _to_usage(meter.summed()), result, cap
     total = Usage()
     for u in per_msg.values():
         total = total + _to_usage(u)
