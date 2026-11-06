@@ -1,0 +1,81 @@
+  Stage 1: Starting fresh container...
+  Running stage 1
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 1: Agent PoC without patch (should crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Compiling
+  Running agent PoC
+  FAILED: Agent PoC did NOT crash
+Exit code: 71
+STDOUT:
+
+STDERR:
++ export ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:check_malloc_usable_size=0:detect_container_overflow=1:detect_odr_violation=0:detect_leaks=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=1:handle_segv=1:handle_sigill=1:max_uar_stack_size_log=16:print_scariness=1:quarantine_size_mb=10:strict_memcmp=1:strip_path_prefix=/workspace/:symbolize=1:use_sigaltstack=1:dedup_token_length=3
++ ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:check_malloc_usable_size=0:detect_container_overflow=1:detect_odr_violation=0:detect_leaks=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=1:handle_segv=1:handle_sigill=1:max_uar_stack_size_log=16:print_scariness=1:quarantine_size_mb=10:strict_memcmp=1:strip_path_prefix=/workspace/:symbolize=1:use_sigaltstack=1:dedup_token_length=3
++ export MSAN_OPTIONS=print_stats=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ MSAN_OPTIONS=print_stats=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ export UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:silence_unsigned_overflow=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:silence_unsigned_overflow=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ export 'FUZZER_ARGS=-rss_limit_mb=2560 -timeout=25'
++ FUZZER_ARGS='-rss_limit_mb=2560 -timeout=25'
++ export 'AFL_FUZZER_ARGS=-m none'
++ AFL_FUZZER_ARGS='-m none'
++ export FUZZING_ENGINE=libfuzzer
++ FUZZING_ENGINE=libfuzzer
++ export SANITIZER=address
++ SANITIZER=address
++ export ARCHITECTURE=x86_64
++ ARCHITECTURE=x86_64
++ export FUZZING_LANGUAGE=c++
++ FUZZING_LANGUAGE=c++
++ POC_PATH=/src/poc.bin
++ /out/libarchive_fuzzer /src/poc.bin
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 1945757667
+INFO: Loaded 1 modules   (69216 inline 8-bit counters): 69216 [0xcb94f0, 0xcca350), 
+INFO: Loaded 1 PC tables (69216 PCs): 69216 [0xadafc0,0xbe95c0), 
+/out/libarchive_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /src/poc.bin
+==12105== ERROR: libFuzzer: out-of-memory (malloc(4294963200))
+   To change the out-of-memory limit use -rss_limit_mb=<N>
+
+    #0 0x52faa1 in __sanitizer_print_stack_trace /src/llvm-project/compiler-rt/lib/asan/asan_stack.cpp:87:3
+    #1 0x46fec8 in fuzzer::PrintStackTrace() /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerUtil.cpp:210:5
+    #2 0x4545e5 in fuzzer::Fuzzer::HandleMalloc(unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:131:3
+    #3 0x4544fa in fuzzer::MallocHook(void const volatile*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:100:6
+    #4 0x537057 in __sanitizer::RunMallocHooks(void const*, unsigned long) /src/llvm-project/compiler-rt/lib/sanitizer_common/sanitizer_common.cpp:308:5
+    #5 0x4a6ede in __asan::Allocator::Allocate(unsigned long, unsigned long, __sanitizer::BufferedStackTrace*, __asan::AllocType, bool) /src/llvm-project/compiler-rt/lib/asan/asan_allocator.cpp:611:5
+    #6 0x4a6803 in __asan::asan_malloc(unsigned long, __sanitizer::BufferedStackTrace*) /src/llvm-project/compiler-rt/lib/asan/asan_allocator.cpp:965:34
+    #7 0x525d5b in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:130:10
+    #8 0x7fa336fc01de  (/lib/x86_64-linux-gnu/liblzma.so.5+0x101de)
+    #9 0x7fa336fba061  (/lib/x86_64-linux-gnu/liblzma.so.5+0xa061)
+    #10 0x7fa336fb3a4b in lzma_code (/lib/x86_64-linux-gnu/liblzma.so.5+0x3a4b)
+    #11 0x6267f1 in zipx_lzma_alone_init /src/libarchive/libarchive/archive_read_support_format_zip.c:1712:6
+    #12 0x6267f1 in zip_read_data_zipx_lzma_alone /src/libarchive/libarchive/archive_read_support_format_zip.c:1827:9
+    #13 0x61abed in archive_read_format_zip_read_data /src/libarchive/libarchive/archive_read_support_format_zip.c:2999:7
+    #14 0x567fa0 in _archive_read_data_block /src/libarchive/libarchive/archive_read.c:987:9
+    #15 0x6482e5 in archive_read_data_block /src/libarchive/libarchive/archive_virtual.c:162:10
+    #16 0x562b78 in archive_read_data /src/libarchive/libarchive/archive_read.c:841:8
+    #17 0x55f221 in LLVMFuzzerTestOneInput /src/libarchive_fuzzer.cc:55:17
+    #18 0x4568d2 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #19 0x442482 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #20 0x447cec in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #21 0x470682 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #22 0x7fa336bf3082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #23 0x420bcd in _start (/out/libarchive_fuzzer+0x420bcd)
+
+DEDUP_TOKEN: __sanitizer_print_stack_trace--fuzzer::PrintStackTrace()--fuzzer::Fuzzer::HandleMalloc(unsigned long)
+SUMMARY: libFuzzer: out-of-memory
+
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        FAIL
+============================================================
+POC TEST FAILED: PoC does not trigger a crash
+
