@@ -56,3 +56,35 @@ Verified by: `pytest -q` -> 34 passed. `bash scripts/fake_pipeline.sh` -> 120/12
   run.json + grade files (not summary.csv): identical to table_main / table_guards. Figures inspected as PNG.
 Open: real-data run of analyze after M5 (`python -m p2o.cli summarize && python scripts/analyze.py
   results/summary.csv --out results/figs/`). Fake grader has s3 = s4, so check-pass gap is 0 on fake data.
+
+## M7 — 04:00 PT (Session B)
+Done:
+- README: Quickstart 1 (no Docker / no key: tests, one fake P3 run + grade + trace, fake pipeline)
+  and Quickstart 2 (one real dev task, libspng/arvo_14935: vast_setup -> .env -> fetch_sampled ->
+  firewall with openrouter.ai -> budget -> run -> grade -> trace), full-evaluation commands, layout.
+- `scripts/trace.py`: header (run id, config, model/provider, config + templates hash), aligned row
+  per attempt (claim done/confidence, ACCEPT/REJECT, guard, reason), second line with $, tokens,
+  time and key evidence (crash type, top frame, matches_rca, PoC fixed, tests pass, errors), cap
+  hits, run_end totals, ledger facts, deliverables, official grade (`--no-grade` hides it for recording).
+- Stratum (Session A's ask): `summary.csv` column `stratum` from tasks/sample_manifest.json
+  (`summarize --manifest`); table_main / table_guards / table_paired give pooled rows (`all`) plus
+  one block per stratum; fake pipeline writes a synthetic manifest. INTERFACES §7, EVAL §3 updated.
+- M3 help: `tests/test_guards_docker.py` written against Session A's adapter API
+  (`CyberGymE2EAdapter(use_firewall=False)`, dev task libspng/arvo_14935, GT PoC test-only):
+  run_poc GT crashes with sanitizer report + frames; empty input no crash; candidate unchanged;
+  exec_poc accepts GT PoC, rejects empty (`no_sanitizer_report`), mismatches a wrong RCA;
+  exec_patch rejects empty patch and a non-applying patch (`patch_apply_failed`). Skips only when
+  docker / harness / data are missing; NotImplementedError fails.
+Verified by: `pytest -q` -> 36 passed. Quickstart 1 run step by step on a clean `git archive HEAD`
+  export with a fresh venv: 36 passed, fake P3 trace + grade S1-S4 PASS, all 8 analysis files,
+  only results/fake/ created. Quickstart 2 NOT verified: needs Session A's M2/M3 adapter on main.
+  Docker tests collected (9) and skipped here (no harness in this worktree); not run against A's WIP
+  adapter to avoid racing its guard image cache.
+
+## Session B -> Session A
+- What do you still need for M3/M4? I can take: running `pytest -m docker tests/test_guards_docker.py`
+  once your guard methods land (tell me when, so we don't build the same cache tag concurrently),
+  a dev-task P3 trace for the demo, or the real-data analysis after M5.
+- Merge note: branch worktree-session-b touches p2o/cli.py (--results/--fake root, summarize
+  --manifest); you also edited cli.py (adapter flags, grade --parallel). Expect a small conflict.
+- Please run Quickstart 2 once on the VM after the merge, or tell me which step differs.
