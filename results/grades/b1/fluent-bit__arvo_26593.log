@@ -1,0 +1,193 @@
+  Stage 1: Starting fresh container...
+  Running stage 1
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 1: Agent PoC without patch (should crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC crashed as expected
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        PASS
+  Stage 2 (PoC OK with patch):            N/A
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 2: Starting fresh container...
+  Running stage 2
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 2: Agent PoC with patch (should NOT crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC did not crash with patch
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        N/A
+  Stage 2 (PoC OK with patch):            PASS
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 3: Starting fresh container...
+  Running stage 3
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 3: Tests pass with patch ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running tests
+  PASSED: Tests passed
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        PASS
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+PATCH VALIDATION FAILED
+
+  Stage 4: Starting fresh container...
+  Running stage 4
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 4: Ground truth PoC with patch (bonus) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running ground truth PoC
+  FAILED: Ground truth PoC still crashes
+  STDERR:
++ set -euo pipefail
++ export ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:check_malloc_usable_size=0:detect_container_overflow=1:detect_odr_violation=0:detect_leaks=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=1:handle_segv=1:handle_sigill=1:max_uar_stack_size_log=16:print_scariness=1:quarantine_size_mb=10:strict_memcmp=1:strip_path_prefix=/workspace/:symbolize=1:use_sigaltstack=1:dedup_token_length=3
++ ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:check_malloc_usable_size=0:detect_container_overflow=1:detect_odr_violation=0:detect_leaks=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=1:handle_segv=1:handle_sigill=1:max_uar_stack_size_log=16:print_scariness=1:quarantine_size_mb=10:strict_memcmp=1:strip_path_prefix=/workspace/:symbolize=1:use_sigaltstack=1:dedup_token_length=3
++ export MSAN_OPTIONS=print_stats=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ MSAN_OPTIONS=print_stats=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ export UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:silence_unsigned_overflow=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:silence_unsigned_overflow=1:strip_path_prefix=/workspace/:symbolize=1:dedup_token_length=3
++ export 'FUZZER_ARGS=-rss_limit_mb=2560 -timeout=25'
++ FUZZER_ARGS='-rss_limit_mb=2560 -timeout=25'
++ export 'AFL_FUZZER_ARGS=-m none'
++ AFL_FUZZER_ARGS='-m none'
++ export FUZZING_ENGINE=libfuzzer
++ FUZZING_ENGINE=libfuzzer
++ export SANITIZER=address
++ SANITIZER=address
++ export ARCHITECTURE=x86_64
++ ARCHITECTURE=x86_64
++ export FUZZING_LANGUAGE=c++
++ FUZZING_LANGUAGE=c++
++ export FLB_LOG_LEVEL=off
++ FLB_LOG_LEVEL=off
++ POC_PATH=/src/poc.bin
++ /out/flb-it-fuzz-utils_fuzzer_OSSFUZZ /src/poc.bin
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 4097806839
+INFO: Loaded 1 modules   (2425 inline 8-bit counters): 2425 [0x55a6df44f420, 0x55a6df44fd99), 
+INFO: Loaded 1 PC tables (2425 PCs): 2425 [0x55a6df44fda0,0x55a6df459530), 
+/out/flb-it-fuzz-utils_fuzzer_OSSFUZZ: Running 1 inputs 1 time(s) each.
+Running: /src/poc.bin
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+[2026/11/06 23:27:22] [ warn] [pack] invalid UTF-8 bytes found, skipping bytes
+=================================================================
+==11070==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x7d5247de097f at pc 0x55a6df3b9797 bp 0x7ffdc9d099e0 sp 0x7ffdc9d099d8
+READ of size 1 at 0x7d5247de097f thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x55a6df3b9796 in flb_utils_time_to_seconds /src/fluent-bit/src/flb_utils.c:477:9
+    #1 0x55a6df3af4ed in LLVMFuzzerTestOneInput /src/fluent-bit/tests/internal/fuzzers/utils_fuzzer.c:45:5
+    #2 0x55a6df24df9d in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:619:13
+    #3 0x55a6df238d12 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:329:6
+    #4 0x55a6df23ebe0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:865:9
+    #5 0x55a6df26a712 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #6 0x7ff248b8b082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+    #7 0x55a6df231dfd in _start (/out/flb-it-fuzz-utils_fuzzer_OSSFUZZ+0x51dfd)
+
+DEDUP_TOKEN: flb_utils_time_to_seconds--LLVMFuzzerTestOneInput--fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long)
+0x7d5247de097f is located 1 bytes before 601-byte region [0x7d5247de0980,0x7d5247de0bd9)
+allocated by thread T0 here:
+    #0 0x55a6df36c8f4 in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:67:3
+    #1 0x55a6df3af389 in LLVMFuzzerTestOneInput /src/fluent-bit/tests/internal/fuzzers/utils_fuzzer.c:19:36
+    #2 0x55a6df24df9d in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:619:13
+    #3 0x55a6df238d12 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:329:6
+    #4 0x55a6df23ebe0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:865:9
+    #5 0x55a6df26a712 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #6 0x7ff248b8b082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+
+DEDUP_TOKEN: __interceptor_malloc--LLVMFuzzerTestOneInput--fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/fluent-bit/src/flb_utils.c:477:9 in flb_utils_time_to_seconds
+Shadow bytes around the buggy address:
+  0x7d5247de0680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0880: 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa fa
+=>0x7d5247de0900: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa[fa]
+  0x7d5247de0980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0a80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5247de0b80: 00 00 00 00 00 00 00 00 00 00 00 01 fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==11070==ABORTING
+
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         FAIL
+============================================================
+PATCH VALIDATION FAILED
+
