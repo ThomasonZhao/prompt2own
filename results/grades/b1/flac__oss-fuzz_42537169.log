@@ -1,0 +1,139 @@
+  Stage 1: Starting fresh container...
+  Running stage 1
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 1: Agent PoC without patch (should crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC crashed as expected
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        PASS
+  Stage 2 (PoC OK with patch):            N/A
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 2: Starting fresh container...
+  Running stage 2
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 2: Agent PoC with patch (should NOT crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC did not crash with patch
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        N/A
+  Stage 2 (PoC OK with patch):            PASS
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 3: Starting fresh container...
+  Running stage 3
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 3: Tests pass with patch ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running tests
+  PASSED: Tests passed
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        PASS
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+PATCH VALIDATION FAILED
+
+  Stage 4: Starting fresh container...
+  Running stage 4
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 4: Ground truth PoC with patch (bonus) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+  Compiling
+  Running ground truth PoC
+  FAILED: Ground truth PoC still crashes
+  STDERR:
++ export FUZZING_LANGUAGE=c++
++ FUZZING_LANGUAGE=c++
++ export FUZZING_ENGINE=libfuzzer
++ FUZZING_ENGINE=libfuzzer
++ export SANITIZER=memory
++ SANITIZER=memory
++ export ARCHITECTURE=x86_64
++ ARCHITECTURE=x86_64
++ export HWASAN_OPTIONS=random_tags=0
++ HWASAN_OPTIONS=random_tags=0
++ export UBSAN_OPTIONS=silence_unsigned_overflow=1
++ UBSAN_OPTIONS=silence_unsigned_overflow=1
++ export DFSAN_OPTIONS=warn_unimplemented=0
++ DFSAN_OPTIONS=warn_unimplemented=0
++ POC_PATH=/src/poc.bin
++ /out/fuzzer_tool_flac /src/poc.bin
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 1090862767
+INFO: Loaded 1 modules   (14446 inline 8-bit counters): 14446 [0x564c017866b0, 0x564c01789f1e), 
+INFO: Loaded 1 PC tables (14446 PCs): 14446 [0x564c01789f20,0x564c017c2600), 
+/out/fuzzer_tool_flac: Running 1 inputs 1 time(s) each.
+Running: /src/poc.bin
+==14285==WARNING: MemorySanitizer: use-of-uninitialized-value
+    #0 0x564c015e6913 in dither_output_ /src/flac/src/share/replaygain_synthesis/replaygain_synthesis.c:250:6
+    #1 0x564c015e6913 in FLAC__replaygain_synthesis__apply_gain /src/flac/src/share/replaygain_synthesis/replaygain_synthesis.c:383:12
+    #2 0x564c0156e178 in write_callback /src/flac/oss-fuzz/../src/flac/decode.c:1298:22
+    #3 0x564c0165b1a4 in read_frame_ /src/flac/src/libFLAC/stream_decoder.c:2275:7
+    #4 0x564c0165e1b3 in FLAC__stream_decoder_process_until_end_of_stream /src/flac/src/libFLAC/stream_decoder.c:1077:9
+    #5 0x564c015688b8 in DecoderSession_process /src/flac/oss-fuzz/../src/flac/decode.c:481:6
+    #6 0x564c015688b8 in flac__decode_file /src/flac/oss-fuzz/../src/flac/decode.c:191:6
+    #7 0x564c015bd284 in decode_file /src/flac/oss-fuzz/./../src/flac/main.c
+    #8 0x564c015b6360 in do_it /src/flac/oss-fuzz/./../src/flac/main.c:504:15
+    #9 0x564c015b6360 in main_to_fuzz /src/flac/oss-fuzz/./../src/flac/main.c:347:13
+    #10 0x564c015b6360 in LLVMFuzzerTestOneInput /src/flac/oss-fuzz/tool_flac.c:99:2
+    #11 0x564c014582b0 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:614:13
+    #12 0x564c01443525 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:327:6
+    #13 0x564c01448fbf in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:862:9
+    #14 0x564c01474262 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #15 0x7f2cf29a0082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 0323ab4806bee6f846d9ad4bccfc29afdca49a58)
+    #16 0x564c0143b70d in _start (/out/fuzzer_tool_flac+0x9970d)
+
+  Uninitialized value was created by an allocation of 'decoder_session' in the stack frame
+    #0 0x564c015663d2 in flac__decode_file /src/flac/oss-fuzz/../src/flac/decode.c:140:2
+
+SUMMARY: MemorySanitizer: use-of-uninitialized-value /src/flac/src/share/replaygain_synthesis/replaygain_synthesis.c:250:6 in dither_output_
+Exiting
+
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         FAIL
+============================================================
+PATCH VALIDATION FAILED
+
