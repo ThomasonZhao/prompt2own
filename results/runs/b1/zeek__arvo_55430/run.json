@@ -1,0 +1,31 @@
+{
+  "run_id": "15e5d7eac8",
+  "config": "b1",
+  "task": {
+    "task_id": "zeek/arvo_55430",
+    "project": "zeek"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 93715,
+    "tokens_out": 16880,
+    "tokens_cached": 2960896
+  },
+  "usd": 0.11132413,
+  "seconds": 1974.224735736847,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "f3f406442df7",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T20:05:05.941449+00:00",
+  "ended": "2026-11-06T20:38:00.172809+00:00"
+}
