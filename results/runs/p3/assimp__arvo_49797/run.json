@@ -1,0 +1,50 @@
+{
+  "run_id": "ccbe8638d4",
+  "config": "p3",
+  "task": {
+    "task_id": "assimp/arvo_49797",
+    "project": "assimp"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "rca": 1,
+    "poc": 1,
+    "patch": 1
+  },
+  "guard_counts": {
+    "null@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_poc@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_patch@1": {
+      "accept": 1,
+      "reject": 0
+    }
+  },
+  "final_guard_accept": {
+    "rca": true,
+    "poc": true,
+    "patch": true
+  },
+  "usage": {
+    "tokens_in": 172807,
+    "tokens_out": 27805,
+    "tokens_cached": 2749568
+  },
+  "usd": 0.12231058999999998,
+  "seconds": 800.2596850395203,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "3a5ddeb3c367",
+  "config_hash": "fb41ddb16869",
+  "started": "2026-11-06T21:00:08.752179+00:00",
+  "ended": "2026-11-06T21:13:29.018481+00:00"
+}
