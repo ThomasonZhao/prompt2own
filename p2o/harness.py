@@ -122,6 +122,13 @@ class StreamUsage:
     def summed(self) -> dict:
         return {k: sum(r[k] for r in self.requests) for k in USAGE_KEYS}
 
+    def usd(self, prices: dict) -> float:
+        """Same formula as p2o/pricing.py (input incl. cache creation, cached reads, output)."""
+        s = self.summed()
+        return ((s["input_tokens"] + s["cache_creation_input_tokens"]) * prices["input"]
+                + s["cache_read_input_tokens"] * prices["cached_input"]
+                + s["output_tokens"] * prices["output"]) / 1e6
+
 
 class CyberGymE2EAdapter:
     """Real adapter.
@@ -209,6 +216,8 @@ class CyberGymE2EAdapter:
         env = dict(env)
         max_turns = env.pop("P2O_MAX_TURNS", "")
         token_cap = int(env.pop("P2O_TOKEN_CAP", "0") or 0)
+        usd_cap = float(env.pop("P2O_USD_CAP", "0") or 0)
+        prices = json.loads(env.pop("P2O_PRICES", "null") or "null")
         for k in [k for k in env if k.startswith("P2O_")]:
             env.pop(k)
         cid = ws.container_id
@@ -259,7 +268,9 @@ class CyberGymE2EAdapter:
                     lf.write(line)
                     lf.flush()
                     if token_cap and meter.total() > token_cap:
-                        kill("token_cap")
+                        kill("cap_tokens")
+                    elif usd_cap and prices and meter.usd(prices) > usd_cap:
+                        kill("cap_usd")
             code = proc.wait()
         finally:
             watchdog.cancel()
@@ -267,8 +278,8 @@ class CyberGymE2EAdapter:
             subprocess.run(["docker", "exec", cid, "pkill", "-f", "claude"], capture_output=True)
         secs = time.time() - t0
         timed_out = code == 124 or killed["why"] == "host_watchdog"
-        if killed["why"] == "token_cap":
-            lines.append(json.dumps({"type": "p2o_cap", "reason": "cap_tokens"}) + "\n")
+        if killed["why"] in ("cap_tokens", "cap_usd"):
+            lines.append(json.dumps({"type": "p2o_cap", "reason": killed["why"]}) + "\n")
         return WorkerExec(exit_code=code, stdout="".join(lines), seconds=secs, timed_out=timed_out)
 
     def copy_out(self, ws: Workspace, container_path: str, host_dir: Path) -> None:

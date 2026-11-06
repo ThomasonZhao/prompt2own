@@ -117,6 +117,8 @@ class ClaudeCodeWorker:
             **{k: self.cfg.model for k in _MODEL_VARS},
             "P2O_MAX_TURNS": str(self.cfg.worker.max_turns),   # adapter controls, not sent to container
             "P2O_TOKEN_CAP": str(self.cfg.caps.max_tokens),
+            "P2O_USD_CAP": str(self.cfg.caps.max_usd),          # in-session USD cap, priced like pricing.py
+            "P2O_PRICES": self.cfg.prices.model_dump_json(),
             "DISABLE_TELEMETRY": "1",
             "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",   # model endpoint only (firewall rule)
         }
@@ -135,7 +137,7 @@ class ClaudeCodeWorker:
             usage, result, cap = parse_stream(ex.stdout)
             out.usage, out.exit_code = usage, ex.exit_code
             if cap:
-                out.worker_error = cap
+                out.worker_error = cap          # "cap_tokens" | "cap_usd"
             elif ex.timed_out:
                 out.worker_error = "worker_timeout"
             elif result is None and ex.exit_code != 0:

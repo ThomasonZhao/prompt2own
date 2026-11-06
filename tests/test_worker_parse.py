@@ -51,6 +51,17 @@ def test_stream_sum_wins_when_larger_than_last_result():
     assert u.tokens_out == 40
 
 
+def test_meter_usd_matches_pricing():
+    from p2o.config import Prices
+    from p2o.pricing import usd
+    m = StreamUsage()
+    for line in LINES:
+        m.feed(line)
+    p = Prices(input=0.15, cached_input=0.03, output=0.5)
+    u, _, _ = parse_stream("\n".join(LINES))
+    assert abs(m.usd(p.model_dump()) - usd(u, p)) < 1e-12
+
+
 def test_cap_marker_and_meter_total():
     m = StreamUsage()
     kept = [m.feed(line) for line in LINES]
