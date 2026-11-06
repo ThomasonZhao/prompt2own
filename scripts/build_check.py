@@ -40,7 +40,7 @@ def check(ad: CyberGymE2EAdapter, t: dict) -> dict:
     rec = logged_minutes(ad).get(t["task_id"])
     if ad._image_exists(tag) and rec is None:     # built before timings were logged: rebuild for E3
         subprocess.run(["docker", "rmi", "-f", tag], capture_output=True)
-    if rec is None or not ad._image_exists(tag):
+    if rec is None or (rec["exit_code"] == 0 and not ad._image_exists(tag)):   # logged failures are final
         try:
             ad.vulnerable_build(task)
         except Exception as e:  # build failures are logged by vulnerable_build; setup failures here
@@ -52,11 +52,18 @@ def check(ad: CyberGymE2EAdapter, t: dict) -> dict:
 
 
 def passes(t: dict, r: dict, max_min: float) -> tuple[bool, str]:
+    # E3 first: a build stopped after exceeding the limit is an E3 failure, not a build failure
+    if t["stratum"] == "easy" and r["minutes"] > max_min:
+        return False, f"E3: compile {r['minutes']} min > {max_min}" + ("" if r["ok"] else " (stopped)")
     if not r["ok"]:
         return False, f"build_failed (exit {r['exit_code']})"
-    if t["stratum"] == "easy" and r["minutes"] > max_min:
-        return False, f"E3: compile {r['minutes']} min > {max_min}"
     return True, "ok"
+
+
+def fetch(task_id: str) -> None:
+    """Reserve tasks are not pre-fetched: download their data and pull their image first."""
+    subprocess.run([sys.executable, "scripts/fetch_sampled.py", "--tasks", task_id], check=True,
+                   capture_output=True, text=True)
 
 
 def main() -> None:
@@ -86,6 +93,7 @@ def main() -> None:
                     raise SystemExit(f"reserve_{t['stratum']} exhausted while replacing {t['task_id']}")
                 nxt = pool[0]
                 used_reserve.add(nxt["task_id"])
+                fetch(nxt["task_id"])
                 rr = check(ad, nxt)
                 m["build_minutes"][nxt["task_id"]] = rr["minutes"] if rr["ok"] else None
                 ok, why = passes(nxt, rr, max_min)
