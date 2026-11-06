@@ -150,7 +150,10 @@ For `single_session`, `stages` is omitted and `prompts.single` names the templat
 s1, s2, s3, s4, usd, tokens_in, tokens_out, tokens_cached, minutes,
 attempts_rca, attempts_poc, attempts_patch, poc_guard_accepts, poc_guard_rejects,
 patch_guard_accepts, patch_guard_rejects, final_poc_guard_accept, final_patch_guard_accept,
-model, provider, prompt_hash, config_hash, claimed_poc, claimed_patch`
+model, provider, prompt_hash, config_hash, claimed_poc, claimed_patch, stratum`
+
+`stratum` is the task's sampling stratum (`easy` | `uniform`) from `tasks/sample_manifest.json`
+key `"stratum"` (`p2o.cli summarize --manifest`); empty for tasks not in the manifest.
 
 `s1..s4` are empty for runs without a grade file. `claimed_poc` / `claimed_patch` are the last parsed
 claim `done` of that stage (empty if the stage was never reached or never produced a claim);

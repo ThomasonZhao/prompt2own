@@ -67,7 +67,33 @@ def metric_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 # ------------------------------------------------------------------ tables
 
+def by_stratum(fn, df: pd.DataFrame, **kw) -> pd.DataFrame:
+    """fn's table on the pooled rows (stratum="all"), then on each sampling stratum present."""
+    st = df["stratum"].fillna("").astype(str) if "stratum" in df else pd.Series("", index=df.index)
+    parts = [("all", df)] + [(v, df[st == v]) for v in sorted(set(st)) if v]
+    out = []
+    for name, sub in parts:
+        t = fn(sub, **kw)
+        if not t.empty or name == "all":
+            t = t.copy()
+            t.insert(min(1, len(t.columns)), "stratum", name)
+            out.append(t)
+    return pd.concat(out, ignore_index=True)
+
+
 def main_table(df: pd.DataFrame) -> pd.DataFrame:
+    return by_stratum(_main_table, df)
+
+
+def guard_table(df: pd.DataFrame) -> pd.DataFrame:
+    return by_stratum(_guard_table, df)
+
+
+def paired_table(df: pd.DataFrame, ref: str = "p3") -> pd.DataFrame:
+    return by_stratum(_paired_table, df, ref=ref)
+
+
+def _main_table(df: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for cfg in _configs(df):
         allr = df[df["config"] == cfg]
@@ -95,7 +121,7 @@ def main_table(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def guard_table(df: pd.DataFrame) -> pd.DataFrame:
+def _guard_table(df: pd.DataFrame) -> pd.DataFrame:
     """Per config with executable guards, per guard: final verdict vs grader truth, over runs
     where the guard was reached; plus the stage FSR (claimed done and grader says no)."""
     m = metric_rows(df)
@@ -132,7 +158,7 @@ def _mcnemar_p(only_a: int, only_b: int) -> float:
     return float(mcnemar([[0, only_a], [only_b, 0]], exact=True).pvalue)
 
 
-def paired_table(df: pd.DataFrame, ref: str = "p3") -> pd.DataFrame:
+def _paired_table(df: pd.DataFrame, ref: str = "p3") -> pd.DataFrame:
     """ref vs every other config on shared tasks: S4 and false success (claimed and not S4)."""
     m = metric_rows(df)
     m["false_success"] = ((m["claimed_success"] == 1) & (m["s4"] == 0)).astype(int)
@@ -164,7 +190,7 @@ def _pct(r, k: str) -> str:
 
 def main_tex(tab: pd.DataFrame, path: Path) -> None:
     t = pd.DataFrame({
-        "Config": tab["config"].str.upper(), "n": tab["n"],
+        "Config": tab["config"].str.upper(), "Stratum": tab["stratum"], "n": tab["n"],
         **{f"S{i} (%)": [_pct(r, f"s{i}") for _, r in tab.iterrows()] for i in (1, 2, 3, 4)},
         "Claimed (%)": [_pct(r, "claimed") for _, r in tab.iterrows()],
         "FSR (%)": [_pct(r, "fsr") for _, r in tab.iterrows()],
@@ -173,7 +199,9 @@ def main_tex(tab: pd.DataFrame, path: Path) -> None:
         "USD/S4": tab["usd_per_s4"].map(lambda v: "--" if pd.isna(v) else f"{v:.2f}"),
         "Min": tab["median_minutes"].map(lambda v: "--" if pd.isna(v) else f"{v:.1f}"),
     })
-    n = int(tab["n"].max()) if len(tab) else 0
+    if set(tab["stratum"]) <= {"all"}:
+        t = t.drop(columns="Stratum")
+    n = int(tab.loc[tab["stratum"] == "all", "n"].max()) if len(tab) else 0
     cap = ("Main results, rates with Wilson 95\\% CI. FSR = claimed and not S4 over claimed; "
            "Gap = S3 and not S4 over S3. " + PRELIM.format(n=n))
     path.write_text(t.to_latex(index=False, escape=False, caption=cap, label="tab:main",
@@ -186,16 +214,19 @@ def guards_tex(gt: pd.DataFrame, path: Path) -> None:
         path.write_text("% no executable guards in this summary\n")
         return
     t = pd.DataFrame({
-        "Config": gt["config"].str.upper(), "Guard": gt["guard"].str.replace("_", "\\_"),
+        "Config": gt["config"].str.upper(), "Stratum": gt["stratum"],
+        "Guard": gt["guard"].str.replace("_", "\\_"),
         "Truth": gt["truth"], "Reached": gt["reached"], "Accepts": gt["accepts"], "Rejects": gt["rejects"],
         "Precision (%)": [_pct(r, "precision") for _, r in gt.iterrows()],
         "Recall (%)": [_pct(r, "recall") for _, r in gt.iterrows()],
         "Stage FSR (%)": [_pct(r, "stage_fsr") for _, r in gt.iterrows()],
     })
+    if set(gt["stratum"]) <= {"all"}:
+        t = t.drop(columns="Stratum")
     cap = ("Guard final verdict vs.\\ official grader over runs where the guard was reached. "
            "Stage FSR = stage claimed done and grader truth false, over stage claims.")
     path.write_text(t.to_latex(index=False, escape=False, caption=cap, label="tab:guards",
-                               column_format="lll" + "r" * (len(t.columns) - 3))
+                               column_format="l" * (len(t.columns) - 6) + "r" * 6)
                     .replace("%)", "\\%)"))
 
 
@@ -361,7 +392,7 @@ def run(summary: Path, out: Path, tasks: Path | None) -> dict[str, pd.DataFrame]
     guards_tex(gt, out / "table_guards.tex")
     pt = paired_table(df)
     pt.to_csv(out / "table_paired.csv", index=False)
-    funnel(tab, out / "fig_funnel.pdf")
+    funnel(tab[tab["stratum"] == "all"], out / "fig_funnel.pdf")
     retries(df, out / "fig_retries.pdf")
     n_dis = failures(df, summary.parent / "runs", out / "failures.md")
     return {"main": tab, "guards": gt, "paired": pt, "n_disagree": n_dis}
@@ -377,11 +408,11 @@ def main() -> None:
     a = ap.parse_args()
     r = run(a.summary, a.out, None if a.all_tasks else a.tasks)
     pd.set_option("display.width", 200)
-    show = ["config", "n", "n_infra_error", "n_ungraded", "s1", "s2", "s3", "s4", "claimed", "fsr",
+    show = ["config", "stratum", "n", "n_infra_error", "n_ungraded", "s1", "s2", "s3", "s4", "claimed", "fsr",
             "check_pass_gap", "usd_total", "usd_per_s4", "median_minutes"]
     print("== table_main\n" + r["main"][show].to_string(index=False, float_format="%.3f"))
     if not r["guards"].empty:
-        print("== table_guards\n" + r["guards"][["config", "guard", "reached", "accepts", "rejects",
+        print("== table_guards\n" + r["guards"][["config", "stratum", "guard", "reached", "accepts", "rejects",
               "false_accepts", "false_rejects", "precision", "recall", "stage_fsr"]]
               .to_string(index=False, float_format="%.3f"))
     if not r["paired"].empty:

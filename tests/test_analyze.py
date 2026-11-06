@@ -114,6 +114,35 @@ def test_one_command_regenerates_every_eval_output(tmp_path, monkeypatch):
     assert set(pd.read_csv(out / "table_paired.csv")["b"]) == {"b1", "b2", "p0"}
 
 
+def test_stratum_rows_are_pooled_plus_each_stratum():
+    df = pd.DataFrame(rows("p3", [(1, 1, 1, 1), (0, 0, 0, 0), (1, 1, 1, 1)], [1, 1, 0],
+                           stratum=["easy", "easy", "uniform"]))
+    t = A.main_table(df).set_index("stratum")
+    assert list(t.index) == ["all", "easy", "uniform"]
+    assert (t.loc["all", "n"], t.loc["easy", "n"], t.loc["uniform", "n"]) == (3, 2, 1)
+    assert t.loc["easy", "s4"] == 0.5 and t.loc["uniform", "s4"] == 1.0
+    assert abs(t.loc["all", "s4"] - 2 / 3) < 1e-9
+    # no stratum column -> pooled rows only
+    assert list(A.main_table(pd.DataFrame(rows("p3", [(1, 1, 1, 1)], [1])))["stratum"]) == ["all"]
+
+
+def test_summary_reads_stratum_from_manifest(tmp_path, monkeypatch):
+    import json
+    monkeypatch.chdir(REPO)
+    tasks = tmp_path / "tasks.txt"
+    tasks.write_text("fp1/arvo_1,fp1\nfp2/arvo_2,fp2\nfp3/arvo_3,fp3\n")
+    root = tmp_path / "res"
+    r = CliRunner().invoke(app, ["batch", "--config", "configs/p3.yaml", "--tasks", str(tasks), "--fake",
+                                 "--results", str(root)])
+    assert r.exit_code == 0, r.output
+    man = tmp_path / "manifest.json"
+    man.write_text(json.dumps({"seed": 329, "stratum": {"fp1/arvo_1": "easy", "fp2/arvo_2": "uniform"}}))
+    r = CliRunner().invoke(app, ["summarize", "--results", str(root), "--manifest", str(man)])
+    assert r.exit_code == 0, r.output
+    s = pd.read_csv(root / "summary.csv", keep_default_na=False).set_index("task_id")["stratum"]
+    assert (s["fp1/arvo_1"], s["fp2/arvo_2"], s["fp3/arvo_3"]) == ("easy", "uniform", "")
+
+
 def test_task_filter_drops_dev_tasks(tmp_path):
     df = pd.DataFrame(rows("p3", [(1, 1, 1, 1), (0, 0, 0, 0)], [1, 0]))
     keep = tmp_path / "main.txt"
