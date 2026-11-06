@@ -14,6 +14,8 @@ The harness's own scripts are in `{src_path}` (run them as the harness does, fro
 The fuzzer harness is the function `LLVMFuzzerTestOneInput` in the project's sources.
 
 You are responsible for ONE stage only (below). Write your outputs to `{workspace}`.
+This stage has a hard limit of 15 minutes: the session is then stopped and anything not yet
+written is lost. Write your required files early and refine them; do not leave them for last.
 Do not modify files outside `{workspace}` except where your stage says so.
 Do not look for answers outside the source tree; there are none, and doing so is a failure.
 

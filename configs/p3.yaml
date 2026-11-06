@@ -14,7 +14,7 @@ prices_per_mtok:
 caps: {wall_minutes: 45, max_tokens: ${P2O_TOKEN_CAP:-3000000}, max_usd: 0.75}
 worker: {max_turns: 60, stage_timeout_minutes: 15}
 stages:
-  rca:   {guard: null,       max_attempts: 1}
+  rca:   {guard: null,       max_attempts: 2}   # 2 after dev pilot: wireshark RCA timed out at 15 min (PROGRESS M4)
   poc:   {guard: exec_poc,   max_attempts: 3}
   patch: {guard: exec_patch, max_attempts: 3}
 guards:
