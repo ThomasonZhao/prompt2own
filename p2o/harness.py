@@ -320,6 +320,15 @@ class CyberGymE2EAdapter:
         import hashlib
         return f"p2o-guardcache:{hashlib.sha1(task.task_id.encode()).hexdigest()[:12]}-vul"
 
+    BUILD_LOG = Path("results/guard_cache/builds.jsonl")   # compile.sh timings (E3 evidence)
+
+    def _log_build(self, task: Task, tag: str, code: int, secs: float, tail: str) -> None:
+        from .types import now
+        self.BUILD_LOG.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.BUILD_LOG, "a") as f:
+            f.write(json.dumps({"ts": now(), "task_id": task.task_id, "tag": tag, "exit_code": code,
+                                "compile_seconds": round(secs, 1), "tail": tail}) + "\n")
+
     _locks: dict[str, threading.Lock] = {}
     _locks_guard = threading.Lock()
 
@@ -342,6 +351,7 @@ class CyberGymE2EAdapter:
                 code, out, err = self._sh(cid, "sudo -E bash -eux /src/compile.sh", timeout=self.COMPILE_TIMEOUT,
                                           workdir="/src")
                 secs = time.time() - t0
+                self._log_build(task, tag, code, secs, (out + err)[-400:] if code else "")
                 if code != 0:
                     raise RuntimeError(f"vulnerable build failed (exit {code}): {(out + err)[-400:]}")
                 self._commit(cid, tag)
