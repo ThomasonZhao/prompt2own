@@ -1,0 +1,50 @@
+{
+  "run_id": "f337f3bd8a",
+  "config": "p3",
+  "task": {
+    "task_id": "fluent-bit/arvo_26593",
+    "project": "fluent-bit"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "rca": 1,
+    "poc": 1,
+    "patch": 1
+  },
+  "guard_counts": {
+    "null@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_poc@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_patch@1": {
+      "accept": 1,
+      "reject": 0
+    }
+  },
+  "final_guard_accept": {
+    "rca": true,
+    "poc": true,
+    "patch": true
+  },
+  "usage": {
+    "tokens_in": 191250,
+    "tokens_out": 14728,
+    "tokens_cached": 2228736
+  },
+  "usd": 0.10291358,
+  "seconds": 630.0881111621857,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "3a5ddeb3c367",
+  "config_hash": "fb41ddb16869",
+  "started": "2026-11-06T23:28:26.484878+00:00",
+  "ended": "2026-11-06T23:38:56.581804+00:00"
+}
