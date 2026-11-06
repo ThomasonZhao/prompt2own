@@ -1,0 +1,193 @@
+  Stage 1: Starting fresh container...
+  Running stage 1
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 1: Agent PoC without patch (should crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC crashed as expected
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        PASS
+  Stage 2 (PoC OK with patch):            N/A
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 2: Starting fresh container...
+  Running stage 2
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 2: Agent PoC with patch (should NOT crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+    Strip level 0 failed, trying next...
+  Applying patch (strip level 1)
+    Strip level 1 failed, trying next...
+  Applying patch (strip level 2)
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC did not crash with patch
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        N/A
+  Stage 2 (PoC OK with patch):            PASS
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 3: Starting fresh container...
+  Running stage 3
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 3: Tests pass with patch ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+    Strip level 0 failed, trying next...
+  Applying patch (strip level 1)
+    Strip level 1 failed, trying next...
+  Applying patch (strip level 2)
+  Compiling
+  Running tests
+  PASSED: Tests passed
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        PASS
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+PATCH VALIDATION FAILED
+
+  Stage 4: Starting fresh container...
+  Running stage 4
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 4: Ground truth PoC with patch (bonus) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+    Strip level 0 failed, trying next...
+  Applying patch (strip level 1)
+    Strip level 1 failed, trying next...
+  Applying patch (strip level 2)
+  Compiling
+  Running ground truth PoC
+  FAILED: Ground truth PoC still crashes
+  STDERR:
++ export FUZZING_ENGINE=libfuzzer
++ FUZZING_ENGINE=libfuzzer
++ export SANITIZER=address
++ SANITIZER=address
++ export ARCHITECTURE=x86_64
++ ARCHITECTURE=x86_64
++ export FUZZING_LANGUAGE=c
++ FUZZING_LANGUAGE=c
++ POC_PATH=/src/poc.bin
++ /out/fuzz_rdf_turtle /src/poc.bin
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 247423029
+INFO: Loaded 1 modules   (210630 inline 8-bit counters): 210630 [0x556a2b06df08, 0x556a2b0a15ce), 
+INFO: Loaded 1 PC tables (210630 PCs): 210630 [0x556a2b0a15d0,0x556a2b3d8230), 
+/out/fuzz_rdf_turtle: Running 1 inputs 1 time(s) each.
+Running: /src/poc.bin
+=================================================================
+==4448==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x7d5ddebe7100 at pc 0x556a29d8ba9c bp 0x7ffc71573c90 sp 0x7ffc71573438
+READ of size 2 at 0x7d5ddebe7100 thread T0
+    #0 0x556a29d8ba9b in strncasecmp /src/llvm-project/compiler-rt/lib/asan/../sanitizer_common/sanitizer_common_interceptors.inc:599:3
+    #1 0x556a2a434b0f in parse_token /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:231:6
+    #2 0x556a2a438b36 in handle_type_cast /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:435:6
+    #3 0x556a2a43339f in tracker_deserializer_turtle_iterate_next /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:776:17
+    #4 0x556a2a43339f in tracker_deserializer_turtle_next /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:942:9
+    #5 0x556a2a30101d in tracker_sparql_cursor_next /work/meson/../../src/tinysparql/src/libtinysparql/tracker-cursor.c:548:12
+    #6 0x556a2a340045 in tracker_data_load_from_deserializer /work/meson/../../src/tinysparql/src/libtinysparql/core/tracker-data-update.c:3407:9
+    #7 0x556a2a4255bd in tracker_direct_batch_update /work/meson/../../src/tinysparql/src/libtinysparql/direct/tracker-direct-batch.c:382:4
+    #8 0x556a2a41e8c8 in tracker_direct_connection_update_batch /work/meson/../../src/tinysparql/src/libtinysparql/direct/tracker-direct.c:1665:2
+    #9 0x556a29e56e91 in LLVMFuzzerTestOneInput /work/meson/../../src/tinysparql/fuzzing/fuzz_rdf_turtle.c:57:2
+    #10 0x556a2ac48c8d in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:619:13
+    #11 0x556a2ac33a02 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:329:6
+    #12 0x556a2ac398d0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:865:9
+    #13 0x556a2ac65402 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #14 0x7f0ddf90e082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+    #15 0x556a29d6f8bd in _start (/out/fuzz_rdf_turtle+0x6ea8bd)
+
+0x7d5ddebe7100 is located 0 bytes after 8192-byte region [0x7d5ddebe5100,0x7d5ddebe7100)
+allocated by thread T0 here:
+    #0 0x556a29e13044 in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:67:3
+    #1 0x556a2a17c8e2 in g_malloc /work/meson/../../src/tinysparql/subprojects/glib-2.80.3/glib/gmem.c:100:13
+    #2 0x556a2a0ced4e in g_buffered_input_stream_set_buffer_size /work/meson/../../src/tinysparql/subprojects/glib-2.80.3/gio/gbufferedinputstream.c:224:16
+    #3 0x556a2a432c32 in maybe_expand_buffer /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:568:4
+    #4 0x556a2a432c32 in tracker_deserializer_turtle_iterate_next /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:751:9
+    #5 0x556a2a432c32 in tracker_deserializer_turtle_next /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:942:9
+    #6 0x556a2a30101d in tracker_sparql_cursor_next /work/meson/../../src/tinysparql/src/libtinysparql/tracker-cursor.c:548:12
+    #7 0x556a2a340045 in tracker_data_load_from_deserializer /work/meson/../../src/tinysparql/src/libtinysparql/core/tracker-data-update.c:3407:9
+    #8 0x556a2a4255bd in tracker_direct_batch_update /work/meson/../../src/tinysparql/src/libtinysparql/direct/tracker-direct-batch.c:382:4
+    #9 0x556a2a41e8c8 in tracker_direct_connection_update_batch /work/meson/../../src/tinysparql/src/libtinysparql/direct/tracker-direct.c:1665:2
+    #10 0x556a29e56e91 in LLVMFuzzerTestOneInput /work/meson/../../src/tinysparql/fuzzing/fuzz_rdf_turtle.c:57:2
+    #11 0x556a2ac48c8d in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:619:13
+    #12 0x556a2ac33a02 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:329:6
+    #13 0x556a2ac398d0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:865:9
+    #14 0x556a2ac65402 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #15 0x7f0ddf90e082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /work/meson/../../src/tinysparql/src/libtinysparql/tracker-deserializer-turtle.c:231:6 in parse_token
+Shadow bytes around the buggy address:
+  0x7d5ddebe6e80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5ddebe6f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5ddebe6f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5ddebe7000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7d5ddebe7080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x7d5ddebe7100:[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7d5ddebe7180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7d5ddebe7200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7d5ddebe7280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7d5ddebe7300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7d5ddebe7380: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==4448==ABORTING
+
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         FAIL
+============================================================
+PATCH VALIDATION FAILED
+

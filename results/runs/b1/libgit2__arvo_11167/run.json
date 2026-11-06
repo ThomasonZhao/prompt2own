@@ -1,0 +1,31 @@
+{
+  "run_id": "e48f356343",
+  "config": "b1",
+  "task": {
+    "task_id": "libgit2/arvo_11167",
+    "project": "libgit2"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 106212,
+    "tokens_out": 4369,
+    "tokens_cached": 456704
+  },
+  "usd": 0.03181742,
+  "seconds": 313.160959482193,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "7130b677ff0e",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T22:13:21.961781+00:00",
+  "ended": "2026-11-06T22:18:35.126653+00:00"
+}
