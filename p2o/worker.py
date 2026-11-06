@@ -35,12 +35,14 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
     """Parse `claude -p --output-format stream-json --verbose` output (Claude Code 2.1.x, as launched
     by the official harness). Returns (usage, result_event, cap_reason).
 
-    Usage = the larger (by total tokens) of: (a) the LAST `result` event's `modelUsage`, which is
-    cumulative over the session (a session emits one `result` per turn, including extra turns triggered
-    by background tasks, and each `result.usage` covers only its own turn, so it must NOT be used);
-    (b) the sum over requests of raw `stream_event` message_start/message_delta usage
-    (--include-partial-messages), which also covers turns after the last result when the session is
-    killed. Fallback: `assistant` usages de-duplicated by message id (zeros via OpenRouter).
+    Usage, in order: (1) the sum over requests of raw `stream_event` message_start/message_delta usage
+    (--include-partial-messages; per field max within a request). Exact, and covers turns after a kill.
+    (2) Only for streams recorded without partial messages: the LAST `result` event's `modelUsage`
+    (cumulative over the session). It double-counts input tokens via OpenRouter, which repeats
+    input_tokens in message_start and message_delta (dev pilot: 246,558 vs 138,773 input; cached and
+    output equal), so it is an upper bound. Never `result.usage`: a session emits one `result` per turn
+    (background tasks trigger extra turns) and each covers only its own turn.
+    (3) `assistant` usages de-duplicated by message id (zeros via OpenRouter).
     This function (with harness.StreamUsage) is the only place that knows these fields."""
     from .harness import StreamUsage
     per_msg: dict[str, dict] = {}
@@ -65,17 +67,14 @@ def parse_stream(stdout: str) -> tuple[Usage, dict | None, str | None]:
             result = d
         elif t == "p2o_cap":
             cap = d.get("reason")
-    candidates = []
+    if meter.requests:            # exact per-request counts (also covers turns after a kill)
+        return _to_usage(meter.summed()), result, cap
     if result is not None and result.get("modelUsage"):
-        candidates.append(_model_usage(result["modelUsage"]))
-    if meter.requests:
-        candidates.append(_to_usage(meter.summed()))
-    if not candidates:
-        total = Usage()
-        for u in per_msg.values():
-            total = total + _to_usage(u)
-        candidates.append(total)
-    return max(candidates, key=lambda u: u.total), result, cap
+        return _model_usage(result["modelUsage"]), result, cap
+    total = Usage()
+    for u in per_msg.values():
+        total = total + _to_usage(u)
+    return total, result, cap
 
 
 def _model_usage(mu: dict) -> Usage:

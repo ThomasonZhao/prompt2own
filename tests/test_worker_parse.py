@@ -32,23 +32,24 @@ def _result(turn_usage, model_usage):
                        "modelUsage": {"m": model_usage}})
 
 
-def test_last_result_model_usage_is_cumulative_and_turn_usage_ignored():
+def test_without_stream_events_last_result_model_usage_is_used_not_turn_usage():
     # background-task turns emit extra result events; result.usage is per turn, modelUsage cumulative
     r1 = _result({"input_tokens": 5, "output_tokens": 5},
                  {"inputTokens": 1000, "outputTokens": 400, "cacheReadInputTokens": 9000})
     r2 = _result({"input_tokens": 1, "output_tokens": 1},
                  {"inputTokens": 1100, "outputTokens": 420, "cacheReadInputTokens": 9500,
                   "cacheCreationInputTokens": 10})
-    u, result, _ = parse_stream("\n".join(LINES + [r1, r2]))
+    no_stream = [line for line in LINES if '"stream_event"' not in line]
+    u, result, _ = parse_stream("\n".join(no_stream + [r1, r2]))
     assert result["usage"]["input_tokens"] == 1
     assert (u.tokens_in, u.tokens_out, u.tokens_cached) == (1110, 420, 9500)
 
 
-def test_stream_sum_wins_when_larger_than_last_result():
-    # killed after a result: later requests only appear in the stream events
-    r1 = _result(ZERO, {"inputTokens": 10, "outputTokens": 1, "cacheReadInputTokens": 0})
-    u, _, _ = parse_stream("\n".join([r1] + LINES))
-    assert u.tokens_out == 40
+def test_stream_events_preferred_over_model_usage():
+    # modelUsage double-counts input via OpenRouter; stream sum is exact and covers post-kill turns
+    r1 = _result(ZERO, {"inputTokens": 999, "outputTokens": 1, "cacheReadInputTokens": 0})
+    u, _, _ = parse_stream("\n".join(LINES + [r1]))
+    assert (u.tokens_in, u.tokens_out, u.tokens_cached) == (300, 40, 50)
 
 
 def test_meter_usd_matches_pricing():
