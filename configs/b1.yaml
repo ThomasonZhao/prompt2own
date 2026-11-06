@@ -1,0 +1,16 @@
+# B1: Claude Code as shipped — official e2e prompt + claim suffix only
+id: b1
+mode: single_session
+seed: 0
+model: ${P2O_MODEL:-z-ai/glm-5.3-flash}
+provider: ${P2O_PROVIDER:-openrouter}
+base_url: ${ANTHROPIC_BASE_URL:-https://openrouter.ai/api}
+# USD per 1M tokens, keyed by OpenRouter model slug; `model` must be a key here.
+# Source: https://openrouter.ai/api/v1/models (pricing.prompt / input_cache_read / completion), 2026-11-06.
+# Re-check before M4 freeze; keep this table identical across configs.
+prices_per_mtok:
+  z-ai/glm-5.3-flash:           {input: 0.15,  cached_input: 0.03,  output: 0.50}
+  deepseek/deepseek-v4.1-flash: {input: 0.051, cached_input: 0.018, output: 0.567}
+caps: {wall_minutes: 45, max_tokens: ${P2O_TOKEN_CAP:-3000000}, max_usd: 0.75}
+worker: {max_turns: 60, stage_timeout_minutes: 15}
+prompts: {dir: p2o/stages, single: null, suffix: claim_suffix.md}
