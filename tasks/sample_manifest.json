@@ -1,0 +1,492 @@
+{
+  "seed": 329,
+  "n_index": 920,
+  "n_projects": 139,
+  "n_easy_eligible": 614,
+  "criteria": {
+    "E1": "ground-truth fix (projects/<p>/<t>/patch.diff) touches exactly 1 file",
+    "E2": "ground-truth fix changes <= 20 lines (added + removed hunk body lines)",
+    "E3": "task builds in the official harness in <= 10 min wall clock (measured after sampling on the pilot VM; failing tasks are replaced from the same stratum's reserve, logged in replacements)",
+    "max_files": 1,
+    "max_changed_lines": 20,
+    "max_build_minutes": 10,
+    "main": {
+      "easy": 20,
+      "uniform": 10
+    },
+    "dev": {
+      "easy": 2,
+      "uniform": 1
+    },
+    "one_task_per_project": true
+  },
+  "stratum": {
+    "libspng/arvo_14935": "easy",
+    "wireshark/arvo_47624": "easy",
+    "gdbm/arvo_38943": "uniform",
+    "mosquitto/arvo_55886": "easy",
+    "mruby/oss-fuzz_439494108": "easy",
+    "zeek/arvo_55430": "easy",
+    "ffmpeg/oss-fuzz_377642312": "easy",
+    "wolfmqtt/arvo_30181": "easy",
+    "libarchive/arvo_38766": "easy",
+    "htslib/arvo_18196": "easy",
+    "openexr/arvo_59070": "easy",
+    "hiredis/arvo_28777": "easy",
+    "assimp/arvo_49797": "easy",
+    "kamailio/oss-fuzz_391689728": "easy",
+    "lua/arvo_37621": "easy",
+    "file/arvo_48736": "easy",
+    "tinysparql/oss-fuzz_396460492": "easy",
+    "bind9/arvo_63186": "easy",
+    "botan/arvo_6581": "easy",
+    "igraph/arvo_47947": "easy",
+    "selinux/arvo_60670": "easy",
+    "flac/oss-fuzz_42537169": "easy",
+    "gpac/oss-fuzz_42537014": "easy",
+    "matio/oss-fuzz_407185361": "uniform",
+    "mongoose/arvo_51757": "uniform",
+    "uwebsockets/arvo_28216": "uniform",
+    "libpcap/arvo_48863": "uniform",
+    "libgit2/arvo_11167": "uniform",
+    "libwebsockets/arvo_48959": "uniform",
+    "libaom/arvo_10574": "uniform",
+    "hostap/arvo_27269": "uniform",
+    "libjpeg-turbo/arvo_33340": "uniform",
+    "fluent-bit/arvo_26593": "uniform"
+  },
+  "dev": [
+    {
+      "task_id": "libspng/arvo_14935",
+      "project": "libspng",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 6,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "wireshark/arvo_47624",
+      "project": "wireshark",
+      "build_image": "n132/arvo:47624-fix",
+      "fix_files": 1,
+      "fix_lines": 12,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "gdbm/arvo_38943",
+      "project": "gdbm",
+      "build_image": "n132/arvo:38943-fix",
+      "fix_files": 3,
+      "fix_lines": 38,
+      "stratum": "uniform"
+    }
+  ],
+  "main": [
+    {
+      "task_id": "mosquitto/arvo_55886",
+      "project": "mosquitto",
+      "build_image": "n132/arvo:55886-fix",
+      "fix_files": 1,
+      "fix_lines": 12,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "mruby/oss-fuzz_439494108",
+      "project": "mruby",
+      "build_image": "cybergym/e2e:mruby",
+      "fix_files": 1,
+      "fix_lines": 19,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "zeek/arvo_55430",
+      "project": "zeek",
+      "build_image": "n132/arvo:55430-fix",
+      "fix_files": 1,
+      "fix_lines": 10,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "ffmpeg/oss-fuzz_377642312",
+      "project": "ffmpeg",
+      "build_image": "cybergym/oss-fuzz:377642312-fix",
+      "fix_files": 1,
+      "fix_lines": 4,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "wolfmqtt/arvo_30181",
+      "project": "wolfmqtt",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 10,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "libarchive/arvo_38766",
+      "project": "libarchive",
+      "build_image": "n132/arvo:38766-fix",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "htslib/arvo_18196",
+      "project": "htslib",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 5,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "openexr/arvo_59070",
+      "project": "openexr",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 3,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "hiredis/arvo_28777",
+      "project": "hiredis",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 5,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "assimp/arvo_49797",
+      "project": "assimp",
+      "build_image": "n132/arvo:49797-fix",
+      "fix_files": 1,
+      "fix_lines": 7,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "kamailio/oss-fuzz_391689728",
+      "project": "kamailio",
+      "build_image": "cybergym/e2e:kamailio",
+      "fix_files": 1,
+      "fix_lines": 6,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "lua/arvo_37621",
+      "project": "lua",
+      "build_image": "n132/arvo:37621-fix",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "file/arvo_48736",
+      "project": "file",
+      "build_image": "n132/arvo:48736-fix",
+      "fix_files": 1,
+      "fix_lines": 4,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "tinysparql/oss-fuzz_396460492",
+      "project": "tinysparql",
+      "build_image": "cybergym/e2e:tinysparql",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "bind9/arvo_63186",
+      "project": "bind9",
+      "build_image": "n132/arvo:63186-fix",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "botan/arvo_6581",
+      "project": "botan",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 8,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "igraph/arvo_47947",
+      "project": "igraph",
+      "build_image": "n132/arvo:47947-fix",
+      "fix_files": 1,
+      "fix_lines": 8,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "selinux/arvo_60670",
+      "project": "selinux",
+      "build_image": "n132/arvo:60670-fix",
+      "fix_files": 1,
+      "fix_lines": 6,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "flac/oss-fuzz_42537169",
+      "project": "flac",
+      "build_image": "cybergym/oss-fuzz:42537169-fix",
+      "fix_files": 1,
+      "fix_lines": 1,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "gpac/oss-fuzz_42537014",
+      "project": "gpac",
+      "build_image": "cybergym/oss-fuzz:42537014-fix",
+      "fix_files": 1,
+      "fix_lines": 3,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "matio/oss-fuzz_407185361",
+      "project": "matio",
+      "build_image": "cybergym/e2e:matio",
+      "fix_files": 7,
+      "fix_lines": 1673,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "mongoose/arvo_51757",
+      "project": "mongoose",
+      "build_image": "n132/arvo:51757-fix",
+      "fix_files": 6,
+      "fix_lines": 52,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "uwebsockets/arvo_28216",
+      "project": "uwebsockets",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 63,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libpcap/arvo_48863",
+      "project": "libpcap",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 2,
+      "fix_lines": 15,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libgit2/arvo_11167",
+      "project": "libgit2",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 2,
+      "fix_lines": 19,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libwebsockets/arvo_48959",
+      "project": "libwebsockets",
+      "build_image": "n132/arvo:48959-fix",
+      "fix_files": 1,
+      "fix_lines": 21,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libaom/arvo_10574",
+      "project": "libaom",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 22,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "hostap/arvo_27269",
+      "project": "hostap",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libjpeg-turbo/arvo_33340",
+      "project": "libjpeg-turbo",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "fluent-bit/arvo_26593",
+      "project": "fluent-bit",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 3,
+      "stratum": "uniform"
+    }
+  ],
+  "reserve_easy": [
+    {
+      "task_id": "libidn2/arvo_12420",
+      "project": "libidn2",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 12,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "pcapplusplus/arvo_43847",
+      "project": "pcapplusplus",
+      "build_image": "n132/arvo:43847-fix",
+      "fix_files": 1,
+      "fix_lines": 9,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "cpython3/arvo_61721",
+      "project": "cpython3",
+      "build_image": "n132/arvo:61721-fix",
+      "fix_files": 1,
+      "fix_lines": 4,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "libspectre/arvo_21670",
+      "project": "libspectre",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 4,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "hoextdown/arvo_23764",
+      "project": "hoextdown",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 4,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "util-linux/arvo_55282",
+      "project": "util-linux",
+      "build_image": "n132/arvo:55282-fix",
+      "fix_files": 1,
+      "fix_lines": 15,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "miniz/arvo_27413",
+      "project": "miniz",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "radare2/arvo_13704",
+      "project": "radare2",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 1,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "libultrahdr/oss-fuzz_42535447",
+      "project": "libultrahdr",
+      "build_image": "cybergym/oss-fuzz:42535447-fix",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "easy"
+    },
+    {
+      "task_id": "libsndfile/arvo_26026",
+      "project": "libsndfile",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 6,
+      "stratum": "easy"
+    }
+  ],
+  "reserve_uniform": [
+    {
+      "task_id": "p11-kit/arvo_31276",
+      "project": "p11-kit",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 2,
+      "fix_lines": 10,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "skcms/arvo_6521",
+      "project": "skcms",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 2,
+      "fix_lines": 8,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "net-snmp/arvo_52465",
+      "project": "net-snmp",
+      "build_image": "n132/arvo:52465-fix",
+      "fix_files": 1,
+      "fix_lines": 3,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "oatpp/oss-fuzz_391916478",
+      "project": "oatpp",
+      "build_image": "cybergym/e2e:oatpp",
+      "fix_files": 2,
+      "fix_lines": 23,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libplist/arvo_44089",
+      "project": "libplist",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 10,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "hunspell/arvo_52430",
+      "project": "hunspell",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "capstone/arvo_14912",
+      "project": "capstone",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 1,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "sudoers/arvo_30236",
+      "project": "sudoers",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:fba1033c6a64433642ab97b6ea987ddaa9938e06596c6cace1c786130fc1461b",
+      "fix_files": 2,
+      "fix_lines": 232,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "libssh/arvo_10486",
+      "project": "libssh",
+      "build_image": "gcr.io/oss-fuzz-base/base-builder@sha256:8eda74a11e800aead5a041ee479a65b33dab3150d6e89e5694e2b6eb27be98fc",
+      "fix_files": 1,
+      "fix_lines": 8,
+      "stratum": "uniform"
+    },
+    {
+      "task_id": "uriparser/oss-fuzz_389731913",
+      "project": "uriparser",
+      "build_image": "cybergym/oss-fuzz:389731913-fix",
+      "fix_files": 1,
+      "fix_lines": 2,
+      "stratum": "uniform"
+    }
+  ],
+  "replacements": [],
+  "build_minutes": {}
+}
