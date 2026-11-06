@@ -86,15 +86,17 @@ def batch(config: Path = typer.Option(...), tasks: Path = typer.Option(...),
 
 @app.command()
 def grade(config: Path = typer.Option(...), tasks: Path = typer.Option(...), fake: bool = False,
-          results: Path = ResultsOpt, parallel: int = 1):
+          results: Path = ResultsOpt, parallel: int = 1,
+          only_new: bool = typer.Option(False, help="skip runs that already have a grade file")):
     """Grade finished runs with the official grader."""
     from concurrent.futures import ProcessPoolExecutor
-    from .grade import grade as do_grade
+    from .grade import grade as do_grade, grade_path
     cfg = load_config(config)
     root = _root(results, fake)
+    todo = [t for t in _tasks(tasks) if not (only_new and grade_path(root, cfg.id, t).exists())]
     # processes, not threads: each official grading run redirects its own stdout to a log file
     with ProcessPoolExecutor(max_workers=max(1, parallel)) as ex:
-        futs = {ex.submit(do_grade, root, cfg.id, t, fake): t for t in _tasks(tasks)}
+        futs = {ex.submit(do_grade, root, cfg.id, t, fake): t for t in todo}
         for f in as_completed(futs):
             t = futs[f]
             try:
