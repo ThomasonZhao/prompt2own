@@ -1,0 +1,31 @@
+{
+  "run_id": "d77b69ac3b",
+  "config": "b1",
+  "task": {
+    "task_id": "assimp/arvo_49797",
+    "project": "assimp"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 242162,
+    "tokens_out": 117919,
+    "tokens_cached": 8401689
+  },
+  "usd": 0.34733446999999995,
+  "seconds": 2288.615513086319,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "23991d212b50",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T20:50:56.024228+00:00",
+  "ended": "2026-11-06T21:29:04.651381+00:00"
+}
