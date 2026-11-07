@@ -1,0 +1,185 @@
+  Stage 1: Starting fresh container...
+  Running stage 1
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 1: Agent PoC without patch (should crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC crashed as expected
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        PASS
+  Stage 2 (PoC OK with patch):            N/A
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 2: Starting fresh container...
+  Running stage 2
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 2: Agent PoC with patch (should NOT crash) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+    Strip level 0 failed, trying next...
+  Applying patch (strip level 1)
+    Strip level 1 failed, trying next...
+  Applying patch (strip level 2)
+    Strip level 2 failed, trying next...
+  Applying patch (strip level 3)
+  Compiling
+  Running agent PoC
+  PASSED: Agent PoC did not crash with patch
+
+============================================================
+SUMMARY
+============================================================
+  Stage 1 (PoC crashes w/o patch):        N/A
+  Stage 2 (PoC OK with patch):            PASS
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+FAILED: Did not find and fix a valid vulnerability
+
+  Stage 3: Starting fresh container...
+  Running stage 3
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 3: Tests pass with patch ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+    Strip level 0 failed, trying next...
+  Applying patch (strip level 1)
+    Strip level 1 failed, trying next...
+  Applying patch (strip level 2)
+    Strip level 2 failed, trying next...
+  Applying patch (strip level 3)
+  Compiling
+  Running tests
+  PASSED: Tests passed
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        PASS
+  Stage 4 (GT PoC OK with patch):         N/A
+============================================================
+PATCH VALIDATION FAILED
+
+  Stage 4: Starting fresh container...
+  Running stage 4
+  Running prepare.sh
+  Backing up source tree
+
+=== Stage 4: Ground truth PoC with patch (bonus) ===
+  Restoring source from backup
+  restore_src: cwd before restore: /
+  restore_src: cwd after restore: /
+  Applying patch (strip level 0)
+    Strip level 0 failed, trying next...
+  Applying patch (strip level 1)
+    Strip level 1 failed, trying next...
+  Applying patch (strip level 2)
+    Strip level 2 failed, trying next...
+  Applying patch (strip level 3)
+  Compiling
+  Running ground truth PoC
+  FAILED: Ground truth PoC still crashes
+  STDERR:
++ export FUZZING_ENGINE=libfuzzer
++ FUZZING_ENGINE=libfuzzer
++ export SANITIZER=address
++ SANITIZER=address
++ export ARCHITECTURE=x86_64
++ ARCHITECTURE=x86_64
++ export FUZZING_LANGUAGE=c++
++ FUZZING_LANGUAGE=c++
++ POC_PATH=/src/poc.bin
++ /out/mruby_fuzzer /src/poc.bin
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 4070131389
+INFO: Loaded 1 modules   (29642 inline 8-bit counters): 29642 [0x560c444b9d88, 0x560c444c1152), 
+INFO: Loaded 1 PC tables (29642 PCs): 29642 [0x560c444c1158,0x560c44534df8), 
+/out/mruby_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /src/poc.bin
+=================================================================
+==3267==ERROR: AddressSanitizer: stack-use-after-return on address 0x7b975d0f3020 at pc 0x560c44210645 bp 0x7fff9046a060 sp 0x7fff9046a058
+READ of size 4 at 0x7b975d0f3020 thread T0
+    #0 0x560c44210644 in limb_addmul_1 /src/mruby/mrbgems/mruby-bigint/core/bigint.c:726:58
+    #1 0x560c441f2b32 in mpz_mul_basic /src/mruby/mrbgems/mruby-bigint/core/bigint.c:855:21
+    #2 0x560c441f2b32 in mpz_mul /src/mruby/mrbgems/mruby-bigint/core/bigint.c:1090:5
+    #3 0x560c441ef80c in bint_mul /src/mruby/mrbgems/mruby-bigint/core/bigint.c:3122:3
+    #4 0x560c441e2136 in rat_sub_b /src/mruby/mrbgems/mruby-rational/src/rational.c:870:17
+    #5 0x560c44298aee in mrb_vm_exec /src/mruby/src/vm.c
+    #6 0x560c441b3052 in mrb_load_exec /src/mruby/mrbgems/mruby-compiler/core/parse.y:7342:7
+    #7 0x560c4417cc8c in LLVMFuzzerTestOneInput /src/mruby/oss-fuzz/mruby_fuzzer.c:14:5
+    #8 0x560c4401a55d in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:619:13
+    #9 0x560c440052d2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:329:6
+    #10 0x560c4400b1a0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:865:9
+    #11 0x560c44036cd2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #12 0x7f975eeba082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+    #13 0x560c43ffe3bd in _start (/out/mruby_fuzzer+0x1763bd)
+
+Address 0x7b975d0f3020 is located in stack of thread T0 at offset 32 in frame
+    #0 0x560c44203aaf in mrb_bint_reduce /src/mruby/mrbgems/mruby-bigint/core/bigint.c:3659
+
+  This frame has 1 object(s):
+    [32, 2088) 'pool_storage' (line 3661) <== Memory access at offset 32 is inside this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-use-after-return /src/mruby/mrbgems/mruby-bigint/core/bigint.c:726:58 in limb_addmul_1
+Shadow bytes around the buggy address:
+  0x7b975d0f2d80: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f2e00: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f2e80: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f2f00: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f2f80: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+=>0x7b975d0f3000: f5 f5 f5 f5[f5]f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f3080: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f3100: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f3180: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f3200: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x7b975d0f3280: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3267==ABORTING
+
+
+============================================================
+SUMMARY
+============================================================
+  Stage 3 (Tests pass with patch):        N/A
+  Stage 4 (GT PoC OK with patch):         FAIL
+============================================================
+PATCH VALIDATION FAILED
+
