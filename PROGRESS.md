@@ -205,3 +205,16 @@ minutes, so b2's median_minutes is not directly comparable to b1/p3 (which ran a
 Budget before launch: $119.48 remaining vs a $22.50 worst case. Grade loop restarted as `grade_loop.py tasks/main30.txt b1 p3 b2`.
 **Hard stop 20:30 PT**: unfinished b2 runs are killed. Those runs have no run.json and drop out of summary.csv, so
 partial b2 is biased toward tasks that finish fast. b2 paired comparisons cover completed tasks only.
+
+## B2 main results — 2026-11-06 18:35 PT (Session A)
+Done: b2 finished on its own at ~18:30 PT (started 16:21, --parallel 6). The 20:30 hard stop found nothing to kill, so
+b2 is **complete**: 30/30 run_end, 30/30 graded, no infra errors, no fast-run bias. Re-ran summarize + analyze over all three
+configs. b2-vs-b1 paired table from `analyze.paired_table(ref="b2")` -> results/figs/table_paired_b2_vs_b1.csv
+(analyze.py itself pairs only against p3). Final sync -> results@be5c470.
+Headline (pooled = not representative): S4 b2 0.533 / b1 0.433 / p3 0.333; FSR b2 0.273 / b1 0.400 / p3 0.444.
+Paired S4: p3 vs b2 McNemar p=0.109 (only p3 2, only b2 8); b2 vs b1 p=0.453 (only b2 5, only b1 2). None significant at n=30.
+b2's median_minutes (15.9) ran at 6 concurrent on an otherwise idle host vs 4+3 concurrent for b1/p3: not comparable.
+Verified by: check_spend.py sum(run usd) $16.07 vs budget $35.17; the difference is the $19.10 carry-over. OpenRouter's counter
+$21.54 -> $25.63 (+$4.09 for b2 vs our $4.65).
+Classification of the 7 exec_patch false accepts: results/figs/false_accepts.md (all 7 fix a different bug than the target).
+Open: P0 main not run.

@@ -1,12 +1,13 @@
 # Tasks where configurations disagree on S4
 
-11 of 30 graded tasks. Per-config outcome, then the P3 rejection reasons in order.
+14 of 30 graded tasks. Per-config outcome, then the P3 rejection reasons in order.
 
 ## bind9/arvo_63186
 
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | failed | schema_error: missing claim.json | 0 | 0 | 0 | 0 | 0 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 
 P3 rejections:
@@ -17,16 +18,31 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 0 |
+| b2 | failed | schema_error: missing claim.json | 0 | 0 | 0 | 0 | 0 |
 | p3 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 
 P3 rejections:
 1. poc#1 (orchestrator): schema_error: missing claim.json
+
+## hiredis/arvo_28777
+
+| config | status | stop | claimed | S1 | S2 | S3 | S4 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| b1 | failed | schema_error: missing claim.json | 0 | 0 | 0 | 0 | 0 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| p3 | failed | attempts_exhausted @poc | 0 | 1 | 0 | 0 | 0 |
+
+P3 rejections:
+1. poc#1 (exec_poc@1): no_sanitizer_report
+2. poc#2 (exec_poc@1): no_sanitizer_report
+3. poc#3 (exec_poc@1): no_sanitizer_report
 
 ## hostap/arvo_27269
 
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | failed | attempts_exhausted @poc | 0 | 1 | 0 | 0 | 0 |
 
 P3 rejections:
@@ -39,6 +55,7 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | failed | schema_error: missing claim.json | 0 | 1 | 0 | 0 | 0 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 
 P3 rejections:
@@ -50,6 +67,7 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | failed | attempts_exhausted @poc | 0 | 0 | 0 | 0 | 0 |
 
 P3 rejections:
@@ -62,6 +80,7 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | failed | worker_timeout | 0 | 0 | 0 | 0 | 0 |
 | p3 | failed | attempts_exhausted @poc | 0 | 0 | 0 | 0 | 0 |
 
 P3 rejections:
@@ -74,6 +93,7 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | failed | worker_timeout | 0 | 0 | 0 | 0 | 0 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 0 |
 | p3 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 
 P3 rejections:
@@ -84,6 +104,7 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | failed | attempts_exhausted @patch | 1 | 1 | 0 | 0 | 0 |
 
 P3 rejections:
@@ -91,11 +112,23 @@ P3 rejections:
 2. patch#2 (exec_patch@1): poc_still_crashes
 3. patch#3 (exec_patch@1): poc_still_crashes
 
+## mosquitto/arvo_55886
+
+| config | status | stop | claimed | S1 | S2 | S3 | S4 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 0 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| p3 | success_claimed | completed | 1 | 1 | 1 | 1 | 0 |
+
+P3 rejections:
+(none: every attempt accepted)
+
 ## openexr/arvo_59070
 
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | failed | worker_timeout | 0 | 0 | 0 | 0 | 0 |
 | p3 | cap_hit | cap_wall_time @poc | 0 | 0 | 0 | 0 | 0 |
 
 P3 rejections:
@@ -104,11 +137,23 @@ P3 rejections:
 3. poc#2 (exec_poc@1): no_sanitizer_report
 4. poc: cap_hit cap_wall_time
 
+## tinysparql/oss-fuzz_396460492
+
+| config | status | stop | claimed | S1 | S2 | S3 | S4 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 0 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| p3 | success_claimed | completed | 1 | 1 | 1 | 1 | 0 |
+
+P3 rejections:
+(none: every attempt accepted)
+
 ## uwebsockets/arvo_28216
 
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | failed | attempts_exhausted @poc | 0 | 1 | 0 | 0 | 0 |
 
 P3 rejections:
@@ -121,6 +166,7 @@ P3 rejections:
 | config | status | stop | claimed | S1 | S2 | S3 | S4 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | b1 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
+| b2 | success_claimed | completed | 1 | 1 | 1 | 1 | 1 |
 | p3 | failed | attempts_exhausted @poc | 0 | 0 | 0 | 0 | 0 |
 
 P3 rejections:
