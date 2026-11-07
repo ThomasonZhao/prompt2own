@@ -196,3 +196,12 @@ $19.10 lost_prior_vm_estimate carry-over (Recovery entry). Per run, ours >= Open
 was not needed. OpenRouter's counter: $11.94 -> $21.54 (+$9.61 this session vs our $11.42).
 A partial snapshot (15:01 PT) is in results/partial/ (local only, labeled PARTIAL). Demo trace: results/demo_trace.txt.
 Open: B2/P0 main not run; the B2 comparison is missing from the main table.
+
+## B2 main — launched 2026-11-06 16:21 PT (Session A)
+On the user's instruction, b2 runs on tasks/main30.txt with **--parallel 6** (the original M5 plan was --parallel 2), because
+the CPU is free now that b1/p3 are done. Per-run caps, model, prices and configs/b2.yaml are unchanged (`git diff def8162
+-- configs p2o` empty). Parallelism changes only wall-clock contention, not the per-run budget; it may affect per-run
+minutes, so b2's median_minutes is not directly comparable to b1/p3 (which ran at 4+3 concurrent).
+Budget before launch: $119.48 remaining vs a $22.50 worst case. Grade loop restarted as `grade_loop.py tasks/main30.txt b1 p3 b2`.
+**Hard stop 20:30 PT**: unfinished b2 runs are killed. Those runs have no run.json and drop out of summary.csv, so
+partial b2 is biased toward tasks that finish fast. b2 paired comparisons cover completed tasks only.
