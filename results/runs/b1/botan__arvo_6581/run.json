@@ -1,0 +1,31 @@
+{
+  "run_id": "c677b84fa6",
+  "config": "b1",
+  "task": {
+    "task_id": "botan/arvo_6581",
+    "project": "botan"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "schema_error: missing claim.json",
+  "failed_at": null,
+  "claimed_success": false,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 108345,
+    "tokens_out": 34268,
+    "tokens_cached": 2839086
+  },
+  "usd": 0.11855833,
+  "seconds": 499.53172993659973,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "4476cb07aa45",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T21:29:04.663110+00:00",
+  "ended": "2026-11-06T21:37:24.197103+00:00"
+}

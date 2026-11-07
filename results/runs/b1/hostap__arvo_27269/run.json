@@ -1,0 +1,31 @@
+{
+  "run_id": "adb362f33b",
+  "config": "b1",
+  "task": {
+    "task_id": "hostap/arvo_27269",
+    "project": "hostap"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 451959,
+    "tokens_out": 52663,
+    "tokens_cached": 10159296
+  },
+  "usd": 0.39890422999999997,
+  "seconds": 1615.3897836208344,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "48f471b54d03",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T22:24:37.344472+00:00",
+  "ended": "2026-11-06T22:51:32.739633+00:00"
+}

@@ -1,0 +1,54 @@
+{
+  "run_id": "0cbf6a9792",
+  "config": "p3",
+  "task": {
+    "task_id": "igraph/arvo_47947",
+    "project": "igraph"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "rca": 1,
+    "poc": 3,
+    "patch": 1
+  },
+  "guard_counts": {
+    "null@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_poc@1": {
+      "accept": 1,
+      "reject": 1
+    },
+    "orchestrator": {
+      "accept": 0,
+      "reject": 1
+    },
+    "exec_patch@1": {
+      "accept": 1,
+      "reject": 0
+    }
+  },
+  "final_guard_accept": {
+    "rca": true,
+    "poc": true,
+    "patch": true
+  },
+  "usage": {
+    "tokens_in": 558914,
+    "tokens_out": 141348,
+    "tokens_cached": 10339564
+  },
+  "usd": 0.46469801999999993,
+  "seconds": 2843.918625831604,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "3a5ddeb3c367",
+  "config_hash": "fb41ddb16869",
+  "started": "2026-11-06T22:06:06.100578+00:00",
+  "ended": "2026-11-06T22:53:30.024397+00:00"
+}

@@ -1,0 +1,31 @@
+{
+  "run_id": "6cf766fc96",
+  "config": "b2",
+  "task": {
+    "task_id": "bind9/arvo_63186",
+    "project": "bind9"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 177712,
+    "tokens_out": 22388,
+    "tokens_cached": 5314624
+  },
+  "usd": 0.19728952,
+  "seconds": 967.4732990264893,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "81102b089426",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T01:00:41.015390+00:00",
+  "ended": "2026-11-07T01:16:48.496225+00:00"
+}

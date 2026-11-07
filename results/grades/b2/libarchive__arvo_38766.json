@@ -1,0 +1,21 @@
+{
+  "config": "b2",
+  "task_id": "libarchive/arvo_38766",
+  "s1": false,
+  "s2": false,
+  "s3": false,
+  "s4": false,
+  "raw": {
+    "results": {
+      "stage1": "no_poc",
+      "stage2": "skipped",
+      "stage3": "skipped",
+      "stage4": "skipped"
+    },
+    "has_poc": false,
+    "has_patch": false,
+    "official_loop_s1": false,
+    "grader": "run_agent.run_final_validation@d0ae0f0",
+    "seconds": 0.0
+  }
+}

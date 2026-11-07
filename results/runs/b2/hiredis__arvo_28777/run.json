@@ -1,0 +1,31 @@
+{
+  "run_id": "130e93d456",
+  "config": "b2",
+  "task": {
+    "task_id": "hiredis/arvo_28777",
+    "project": "hiredis"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 155637,
+    "tokens_out": 28299,
+    "tokens_cached": 2409088
+  },
+  "usd": 0.10976769,
+  "seconds": 376.10876846313477,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "12b26e3e2901",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T00:33:02.720842+00:00",
+  "ended": "2026-11-07T00:39:18.832475+00:00"
+}

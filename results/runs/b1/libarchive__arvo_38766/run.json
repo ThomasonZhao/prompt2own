@@ -1,0 +1,31 @@
+{
+  "run_id": "4b34071217",
+  "config": "b1",
+  "task": {
+    "task_id": "libarchive/arvo_38766",
+    "project": "libarchive"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "cap_usd",
+  "failed_at": null,
+  "claimed_success": false,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 789530,
+    "tokens_out": 141874,
+    "tokens_cached": 18904237
+  },
+  "usd": 0.75649361,
+  "seconds": 2515.0129590034485,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "8d4dd01dca3d",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T20:22:16.847011+00:00",
+  "ended": "2026-11-06T21:04:11.866326+00:00"
+}

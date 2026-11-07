@@ -1,0 +1,31 @@
+{
+  "run_id": "2f1eb5f65a",
+  "config": "b2",
+  "task": {
+    "task_id": "wolfmqtt/arvo_30181",
+    "project": "wolfmqtt"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 75747,
+    "tokens_out": 20055,
+    "tokens_cached": 1837824
+  },
+  "usd": 0.07652427,
+  "seconds": 677.0275344848633,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "83233176c4e2",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T00:21:45.664605+00:00",
+  "ended": "2026-11-07T00:33:02.701377+00:00"
+}

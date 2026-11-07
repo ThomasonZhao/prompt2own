@@ -1,0 +1,31 @@
+{
+  "run_id": "7ef4f96582",
+  "config": "b2",
+  "task": {
+    "task_id": "lua/arvo_37621",
+    "project": "lua"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "schema_error: missing claim.json",
+  "failed_at": null,
+  "claimed_success": false,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 604589,
+    "tokens_out": 23300,
+    "tokens_cached": 4076096
+  },
+  "usd": 0.22462122999999998,
+  "seconds": 1760.537297487259,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "6cf53e049aca",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T00:47:03.504709+00:00",
+  "ended": "2026-11-07T01:16:24.065899+00:00"
+}

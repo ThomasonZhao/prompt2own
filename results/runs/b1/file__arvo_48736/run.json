@@ -1,0 +1,31 @@
+{
+  "run_id": "2d7aa71028",
+  "config": "b1",
+  "task": {
+    "task_id": "file/arvo_48736",
+    "project": "file"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 909525,
+    "tokens_out": 22332,
+    "tokens_cached": 3552640
+  },
+  "usd": 0.25417395000000004,
+  "seconds": 645.2595138549805,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "a0acd2717a72",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T21:15:34.908499+00:00",
+  "ended": "2026-11-06T21:26:20.170452+00:00"
+}

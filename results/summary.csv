@@ -1,0 +1,92 @@
+config,task_id,project,seed,status,stop_reason,failed_at,claimed_success,s1,s2,s3,s4,usd,tokens_in,tokens_out,tokens_cached,minutes,attempts_rca,attempts_poc,attempts_patch,poc_guard_accepts,poc_guard_rejects,patch_guard_accepts,patch_guard_rejects,final_poc_guard_accept,final_patch_guard_accept,model,provider,prompt_hash,config_hash,claimed_poc,claimed_patch,stratum
+b1,assimp/arvo_49797,assimp,0,success_claimed,completed,,1,1,1,1,0,0.3473,242162,117919,8401689,38.14,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,23991d212b50,f58ddb8f09a3,,,easy
+b1,bind9/arvo_63186,bind9,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.1312,97821,32333,3345973,10.01,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,ab1e2ea83c0a,f58ddb8f09a3,,,easy
+b1,botan/arvo_6581,botan,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.1186,108345,34268,2839086,8.33,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,4476cb07aa45,f58ddb8f09a3,,,easy
+b1,file/arvo_48736,file,0,success_claimed,completed,,1,1,1,1,1,0.2542,909525,22332,3552640,10.75,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,a0acd2717a72,f58ddb8f09a3,,,easy
+b1,flac/oss-fuzz_42537169,flac,0,success_claimed,completed,,1,1,1,1,0,0.3368,302201,95761,8120766,35.96,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d8c3b2ddab5d,f58ddb8f09a3,,,easy
+b1,fluent-bit/arvo_26593,fluent-bit,0,success_claimed,completed,,1,1,1,1,0,0.0211,79041,2372,267392,17.17,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,ed53a98bbb30,f58ddb8f09a3,,,uniform
+b1,gpac/oss-fuzz_42537014,gpac,0,success_claimed,completed,,1,1,1,1,0,0.1799,373215,14682,3887296,25.38,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,74801b5e76bf,f58ddb8f09a3,,,easy
+b1,hiredis/arvo_28777,hiredis,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.1892,134857,92783,4086686,25.67,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d0cc94029cd4,f58ddb8f09a3,,,easy
+b1,hostap/arvo_27269,hostap,0,success_claimed,completed,,1,1,1,1,1,0.3989,451959,52663,10159296,26.92,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,48f471b54d03,f58ddb8f09a3,,,uniform
+b1,htslib/arvo_18196,htslib,0,success_claimed,completed,,1,1,1,1,0,0.2257,108455,37301,6357888,21.58,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,464a8b62132d,f58ddb8f09a3,,,easy
+b1,igraph/arvo_47947,igraph,0,failed,schema_error: missing claim.json,,0,1,0,0,0,0.1009,197281,16630,2099840,8.24,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,ec05f61efdbf,f58ddb8f09a3,,,easy
+b1,kamailio/oss-fuzz_391689728,kamailio,0,success_claimed,completed,,1,1,1,1,1,0.107,135802,9451,2729984,20.49,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,e3410f6a6e9c,f58ddb8f09a3,,,easy
+b1,libaom/arvo_10574,libaom,0,failed,worker_timeout,,0,1,1,1,1,0.5167,713087,59180,12671843,46.58,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,597a9cd861a8,f58ddb8f09a3,,,uniform
+b1,libarchive/arvo_38766,libarchive,0,failed,cap_usd,,0,0,0,0,0,0.7565,789530,141874,18904237,41.92,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,8d4dd01dca3d,f58ddb8f09a3,,,easy
+b1,libgit2/arvo_11167,libgit2,0,success_claimed,completed,,1,1,1,1,1,0.0318,106212,4369,456704,5.22,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,7130b677ff0e,f58ddb8f09a3,,,uniform
+b1,libidn2/arvo_12420,libidn2,0,success_claimed,completed,,1,1,1,1,1,0.1511,190036,84443,2679461,23.23,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,46ca217b0181,f58ddb8f09a3,,,easy
+b1,libjpeg-turbo/arvo_33340,libjpeg-turbo,0,success_claimed,completed,,1,1,1,1,1,0.3241,225752,69915,8509376,25.09,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,ad3aebfb9844,f58ddb8f09a3,,,uniform
+b1,libpcap/arvo_48863,libpcap,0,success_claimed,completed,,1,1,1,1,1,0.0991,87387,10555,2690048,8.35,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,50d2cfca2a10,f58ddb8f09a3,,,uniform
+b1,libwebsockets/arvo_48959,libwebsockets,0,success_claimed,completed,,1,1,1,1,1,0.0457,101675,10911,833536,14.53,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,8f592dfd0286,f58ddb8f09a3,,,uniform
+b1,lua/arvo_37621,lua,0,failed,worker_timeout,,0,0,0,0,0,0.0818,114176,11354,1965056,46.96,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,b0494eccfd20,f58ddb8f09a3,,,easy
+b1,matio/oss-fuzz_407185361,matio,0,failed,worker_timeout,,0,0,0,0,0,0.0836,41486,11679,2385920,46.53,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,ac98e9e66e0c,f58ddb8f09a3,,,uniform
+b1,mongoose/arvo_51757,mongoose,0,success_claimed,completed,,1,1,1,1,1,0.0437,36631,9427,1116160,3.79,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,efd2385aa9ad,f58ddb8f09a3,,,uniform
+b1,mosquitto/arvo_55886,mosquitto,0,success_claimed,completed,,1,1,1,1,0,0.0951,139737,22171,2102720,10.81,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,eecc27378a45,f58ddb8f09a3,,,easy
+b1,mruby/oss-fuzz_439494108,mruby,0,success_claimed,completed,,1,1,1,1,0,0.0962,74874,13739,2603392,45.83,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,1cb45d20c2a7,f58ddb8f09a3,,,easy
+b1,openexr/arvo_59070,openexr,0,success_claimed,completed,,1,1,1,1,1,0.0807,67571,16354,2079232,31.71,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,a7676a939e59,f58ddb8f09a3,,,easy
+b1,selinux/arvo_60670,selinux,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.1034,192407,11940,2285888,8.86,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,2e36c977bbdc,f58ddb8f09a3,,,easy
+b1,tinysparql/oss-fuzz_396460492,tinysparql,0,success_claimed,completed,,1,1,1,1,0,0.0246,44413,5999,498368,12.3,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d3798483ee16,f58ddb8f09a3,,,easy
+b1,uwebsockets/arvo_28216,uwebsockets,0,success_claimed,completed,,1,1,1,1,1,0.2212,68804,73055,5811200,24.16,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,c3df2816702a,f58ddb8f09a3,,,uniform
+b1,wolfmqtt/arvo_30181,wolfmqtt,0,failed,schema_error: missing claim.json,,0,1,0,0,0,0.1231,140119,24754,2989376,6.37,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,eac47e511b7a,f58ddb8f09a3,,,easy
+b1,zeek/arvo_55430,zeek,0,success_claimed,completed,,1,1,1,1,1,0.1113,93715,16880,2960896,32.9,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,f3f406442df7,f58ddb8f09a3,,,easy
+b2,assimp/arvo_49797,assimp,0,success_claimed,completed,,1,1,1,1,0,0.0476,99467,11446,897216,10.65,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,fa876764b8a2,21157656666c,,,easy
+b2,bind9/arvo_63186,bind9,0,success_claimed,completed,,1,1,1,1,1,0.1973,177712,22388,5314624,16.12,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,81102b089426,21157656666c,,,easy
+b2,botan/arvo_6581,botan,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.1703,157629,42547,4178917,8.94,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,3738c3e7dbfb,21157656666c,,,easy
+b2,file/arvo_48736,file,0,success_claimed,completed,,1,1,1,1,1,0.1093,90867,18351,2884608,11.72,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,f9c1e472b379,21157656666c,,,easy
+b2,flac/oss-fuzz_42537169,flac,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.3466,231535,63518,9338368,24.02,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d3a0949cdf01,21157656666c,,,easy
+b2,fluent-bit/arvo_26593,fluent-bit,0,success_claimed,completed,,1,1,1,1,0,0.0257,37961,4914,586368,19.41,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,7be2d99579ca,21157656666c,,,uniform
+b2,gpac/oss-fuzz_42537014,gpac,0,success_claimed,completed,,1,1,1,1,0,0.1288,254714,14082,2784768,26.83,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,e60309564839,21157656666c,,,easy
+b2,hiredis/arvo_28777,hiredis,0,success_claimed,completed,,1,1,1,1,1,0.1098,155637,28299,2409088,6.27,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,12b26e3e2901,21157656666c,,,easy
+b2,hostap/arvo_27269,hostap,0,success_claimed,completed,,1,1,1,1,1,0.0842,80459,16552,2128960,6.29,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d7ea936fbd1d,21157656666c,,,uniform
+b2,htslib/arvo_18196,htslib,0,failed,worker_timeout,,0,0,0,0,0,0.2833,100573,23474,8549888,46.13,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,1872c076f2eb,21157656666c,,,easy
+b2,igraph/arvo_47947,igraph,0,success_claimed,completed,,1,1,1,1,1,0.129,208838,22701,2878720,25.8,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,5ac7ecd1748a,21157656666c,,,easy
+b2,kamailio/oss-fuzz_391689728,kamailio,0,success_claimed,completed,,1,1,1,1,1,0.0379,49348,6819,901760,13.33,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d9d6ede0c945,21157656666c,,,easy
+b2,libaom/arvo_10574,libaom,0,success_claimed,completed,,1,1,1,1,1,0.1064,239515,19593,2022208,19.29,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,d76664ec1360,21157656666c,,,uniform
+b2,libarchive/arvo_38766,libarchive,0,failed,worker_timeout,,0,0,0,0,0,0.3326,574624,37570,7588032,47.27,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,7d6f304a3a9a,21157656666c,,,easy
+b2,libgit2/arvo_11167,libgit2,0,success_claimed,completed,,1,1,1,1,1,0.0218,31410,3484,511828,4.73,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,6f7ba206d4f1,21157656666c,,,uniform
+b2,libidn2/arvo_12420,libidn2,0,success_claimed,completed,,1,1,1,1,1,0.2204,423673,22060,4859904,14.65,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,f63406cf86de,21157656666c,,,easy
+b2,libjpeg-turbo/arvo_33340,libjpeg-turbo,0,failed,worker_timeout,,0,0,0,0,0,0.1055,230885,14699,2116672,46.52,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,4bc2a45ac261,21157656666c,,,uniform
+b2,libpcap/arvo_48863,libpcap,0,success_claimed,completed,,1,1,1,1,1,0.3087,228780,73071,7926937,17.49,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,30f390b38960,21157656666c,,,uniform
+b2,libwebsockets/arvo_48959,libwebsockets,0,success_claimed,completed,,1,1,1,1,1,0.0246,51748,10190,391360,13.81,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,c8ab43a8eba2,21157656666c,,,uniform
+b2,lua/arvo_37621,lua,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.2246,604589,23300,4076096,29.34,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,6cf53e049aca,21157656666c,,,easy
+b2,matio/oss-fuzz_407185361,matio,0,success_claimed,completed,,1,1,1,1,0,0.4108,944589,26134,8536448,26.0,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,e038f881875d,21157656666c,,,uniform
+b2,mongoose/arvo_51757,mongoose,0,success_claimed,completed,,1,1,1,1,1,0.0682,63979,16115,1683584,3.74,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,3d9572621a64,21157656666c,,,uniform
+b2,mosquitto/arvo_55886,mosquitto,0,success_claimed,completed,,1,1,1,1,1,0.089,213148,13871,1668096,9.21,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,ecc1578eb160,21157656666c,,,easy
+b2,mruby/oss-fuzz_439494108,mruby,0,success_claimed,completed,,1,1,1,1,0,0.0688,180220,10008,1226880,8.47,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,1ea7089d7b91,21157656666c,,,easy
+b2,openexr/arvo_59070,openexr,0,failed,worker_timeout,,0,0,0,0,0,0.3456,293273,31689,9525760,46.73,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,32177a3cdafc,21157656666c,,,easy
+b2,selinux/arvo_60670,selinux,0,failed,schema_error: missing claim.json,,0,0,0,0,0,0.1451,272705,20962,3122752,15.24,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,9b5fc73c881b,21157656666c,,,easy
+b2,tinysparql/oss-fuzz_396460492,tinysparql,0,success_claimed,completed,,1,1,1,1,1,0.0446,37731,11678,1101952,15.76,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,6b1cca9b4f18,21157656666c,,,easy
+b2,uwebsockets/arvo_28216,uwebsockets,0,success_claimed,completed,,1,1,1,1,1,0.2192,208877,55557,5334912,22.72,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,34d768dc2a32,21157656666c,,,uniform
+b2,wolfmqtt/arvo_30181,wolfmqtt,0,success_claimed,completed,,1,1,1,1,0,0.0765,75747,20055,1837824,11.28,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,83233176c4e2,21157656666c,,,easy
+b2,zeek/arvo_55430,zeek,0,success_claimed,completed,,1,1,1,1,1,0.1635,199179,21376,4096576,27.21,0,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,0c99ed5097cb,21157656666c,,,easy
+p3,assimp/arvo_49797,assimp,0,success_claimed,completed,,1,1,1,1,0,0.1223,172807,27805,2749568,13.34,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,bind9/arvo_63186,bind9,0,success_claimed,completed,,1,1,1,1,1,0.1437,127788,18731,3838336,15.24,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,botan/arvo_6581,botan,0,failed,attempts_exhausted,rca,0,0,0,0,0,0.0994,91320,26166,2422080,31.33,2,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,,,easy
+p3,file/arvo_48736,file,0,success_claimed,completed,,1,1,1,1,1,0.1075,234892,26865,1961153,10.5,1,1,2,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,flac/oss-fuzz_42537169,flac,0,success_claimed,completed,,1,1,1,1,1,0.3089,480546,70765,6713786,26.01,1,2,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,fluent-bit/arvo_26593,fluent-bit,0,success_claimed,completed,,1,1,1,1,0,0.1029,191250,14728,2228736,10.5,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,gpac/oss-fuzz_42537014,gpac,0,success_claimed,completed,,1,1,1,1,0,0.0462,79877,9222,987665,14.81,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,hiredis/arvo_28777,hiredis,0,failed,attempts_exhausted,poc,0,1,0,0,0,0.052,167105,7822,766528,4.48,1,3,0,0,3,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,,easy
+p3,hostap/arvo_27269,hostap,0,failed,attempts_exhausted,poc,0,1,0,0,0,0.1823,240739,44455,4132480,8.09,1,3,0,0,3,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,,uniform
+p3,htslib/arvo_18196,htslib,0,failed,attempts_exhausted,poc,0,0,0,0,0,0.1217,315006,25089,2063809,9.89,1,3,0,0,3,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,,easy
+p3,igraph/arvo_47947,igraph,0,success_claimed,completed,,1,1,1,1,1,0.4647,558914,141348,10339564,47.4,1,3,1,1,1,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,kamailio/oss-fuzz_391689728,kamailio,0,failed,attempts_exhausted,poc,0,0,0,0,0,0.3825,751141,164084,6260232,44.59,1,3,0,0,1,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,,easy
+p3,libaom/arvo_10574,libaom,0,success_claimed,completed,,1,1,1,1,1,0.1443,155778,30474,3524672,18.43,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,libarchive/arvo_38766,libarchive,0,failed,attempts_exhausted,rca,0,0,0,0,0,0.2622,336677,33686,6494784,33.4,2,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,,,easy
+p3,libgit2/arvo_11167,libgit2,0,success_claimed,completed,,1,1,1,1,1,0.0218,36370,3598,485888,4.45,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,libidn2/arvo_12420,libidn2,0,success_claimed,completed,,1,1,1,1,1,0.1595,279808,46698,3138987,20.65,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,libjpeg-turbo/arvo_33340,libjpeg-turbo,0,failed,attempts_exhausted,poc,0,0,0,0,0,0.2988,297943,89724,6973376,35.88,1,3,0,0,2,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,0,,uniform
+p3,libpcap/arvo_48863,libpcap,0,success_claimed,completed,,1,1,1,1,1,0.0707,87457,28221,1448506,8.57,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,libspng/arvo_14935,libspng,0,success_claimed,completed,,1,1,1,1,1,0.3297,895923,63956,5443373,30.89,2,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,libwebsockets/arvo_48959,libwebsockets,0,success_claimed,completed,,1,1,1,1,1,0.0753,240808,14796,1060736,21.4,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,lua/arvo_37621,lua,0,failed,attempts_exhausted,rca,0,0,0,0,0,0.0974,228174,16658,1827136,31.73,2,0,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,,,easy
+p3,matio/oss-fuzz_407185361,matio,0,success_claimed,completed,,1,1,1,1,1,0.0958,225460,10637,1889152,12.76,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,mongoose/arvo_51757,mongoose,0,failed,attempts_exhausted,patch,1,1,0,0,0,0.1015,402447,11889,1171520,4.9,1,1,3,1,0,0,3,1,0,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,uniform
+p3,mosquitto/arvo_55886,mosquitto,0,success_claimed,completed,,1,1,1,1,0,0.0943,135515,37782,1835301,12.49,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,mruby/oss-fuzz_439494108,mruby,0,success_claimed,completed,,1,1,1,1,0,0.084,169844,16457,1677824,19.12,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,openexr/arvo_59070,openexr,0,cap_hit,cap_wall_time,poc,0,0,0,0,0,0.5489,502695,173568,12892040,45.49,2,2,0,0,1,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,0,,easy
+p3,selinux/arvo_60670,selinux,0,failed,attempts_exhausted,poc,0,0,0,0,0,0.3895,397098,97759,9367488,35.84,1,3,0,0,1,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,0,,easy
+p3,tinysparql/oss-fuzz_396460492,tinysparql,0,success_claimed,completed,,1,1,1,1,0,0.0915,155673,17888,1972224,20.89,1,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,uwebsockets/arvo_28216,uwebsockets,0,failed,attempts_exhausted,poc,0,1,0,0,0,0.2626,710065,109656,3376768,22.13,1,3,0,0,3,0,0,0,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,,uniform
+p3,wolfmqtt/arvo_30181,wolfmqtt,0,success_claimed,completed,,1,1,1,1,0,0.2114,275706,49237,4847424,21.09,2,1,1,1,0,1,0,1,1,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,1,1,easy
+p3,zeek/arvo_55430,zeek,0,failed,attempts_exhausted,poc,0,0,0,0,0,0.5509,657671,201141,11721677,50.56,1,3,0,0,0,0,0,,,z-ai/glm-5.3-flash,openrouter,3a5ddeb3c367,fb41ddb16869,0,,easy

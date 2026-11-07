@@ -1,0 +1,21 @@
+{
+  "config": "b1",
+  "task_id": "htslib/arvo_18196",
+  "s1": true,
+  "s2": true,
+  "s3": true,
+  "s4": false,
+  "raw": {
+    "results": {
+      "stage1": "passed",
+      "stage2": "passed",
+      "stage3": "passed",
+      "stage4": "failed"
+    },
+    "has_poc": true,
+    "has_patch": true,
+    "official_loop_s1": true,
+    "grader": "run_agent.run_final_validation@d0ae0f0",
+    "seconds": 278.8
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "run_id": "f7d7ccb9dd",
+  "config": "b1",
+  "task": {
+    "task_id": "libaom/arvo_10574",
+    "project": "libaom"
+  },
+  "seed": 0,
+  "status": "failed",
+  "stop_reason": "worker_timeout",
+  "failed_at": null,
+  "claimed_success": false,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 713087,
+    "tokens_out": 59180,
+    "tokens_cached": 12671843
+  },
+  "usd": 0.51670834,
+  "seconds": 2794.6879053115845,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "597a9cd861a8",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T22:18:35.149508+00:00",
+  "ended": "2026-11-06T23:05:09.839400+00:00"
+}

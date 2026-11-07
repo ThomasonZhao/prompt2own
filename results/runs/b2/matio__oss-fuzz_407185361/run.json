@@ -1,0 +1,31 @@
+{
+  "run_id": "334666a062",
+  "config": "b2",
+  "task": {
+    "task_id": "matio/oss-fuzz_407185361",
+    "project": "matio"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 944589,
+    "tokens_out": 26134,
+    "tokens_cached": 8536448
+  },
+  "usd": 0.41084879,
+  "seconds": 1559.9350111484528,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "e038f881875d",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T01:17:20.317129+00:00",
+  "ended": "2026-11-07T01:43:20.256262+00:00"
+}

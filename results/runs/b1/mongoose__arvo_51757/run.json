@@ -1,0 +1,31 @@
+{
+  "run_id": "b865fc4c75",
+  "config": "b1",
+  "task": {
+    "task_id": "mongoose/arvo_51757",
+    "project": "mongoose"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 36631,
+    "tokens_out": 9427,
+    "tokens_cached": 1116160
+  },
+  "usd": 0.043692949999999994,
+  "seconds": 227.22118210792542,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "efd2385aa9ad",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T21:56:40.543106+00:00",
+  "ended": "2026-11-06T22:00:27.769189+00:00"
+}

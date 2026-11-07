@@ -1,0 +1,31 @@
+{
+  "run_id": "a888c2301a",
+  "config": "b2",
+  "task": {
+    "task_id": "mruby/oss-fuzz_439494108",
+    "project": "mruby"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 180220,
+    "tokens_out": 10008,
+    "tokens_cached": 1226880
+  },
+  "usd": 0.0688434,
+  "seconds": 508.0696918964386,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "1ea7089d7b91",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T00:21:45.655792+00:00",
+  "ended": "2026-11-07T00:30:13.743860+00:00"
+}

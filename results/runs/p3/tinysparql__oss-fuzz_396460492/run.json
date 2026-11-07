@@ -1,0 +1,50 @@
+{
+  "run_id": "7cee248b5e",
+  "config": "p3",
+  "task": {
+    "task_id": "tinysparql/oss-fuzz_396460492",
+    "project": "tinysparql"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "rca": 1,
+    "poc": 1,
+    "patch": 1
+  },
+  "guard_counts": {
+    "null@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_poc@1": {
+      "accept": 1,
+      "reject": 0
+    },
+    "exec_patch@1": {
+      "accept": 1,
+      "reject": 0
+    }
+  },
+  "final_guard_accept": {
+    "rca": true,
+    "poc": true,
+    "patch": true
+  },
+  "usage": {
+    "tokens_in": 155673,
+    "tokens_out": 17888,
+    "tokens_cached": 1972224
+  },
+  "usd": 0.09146167,
+  "seconds": 1253.26593875885,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "3a5ddeb3c367",
+  "config_hash": "fb41ddb16869",
+  "started": "2026-11-06T21:45:12.655386+00:00",
+  "ended": "2026-11-06T22:06:05.926194+00:00"
+}

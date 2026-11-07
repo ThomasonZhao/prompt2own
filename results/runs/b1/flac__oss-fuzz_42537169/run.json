@@ -1,0 +1,31 @@
+{
+  "run_id": "2c776d70f5",
+  "config": "b1",
+  "task": {
+    "task_id": "flac/oss-fuzz_42537169",
+    "project": "flac"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 302201,
+    "tokens_out": 95761,
+    "tokens_cached": 8120766
+  },
+  "usd": 0.33683363,
+  "seconds": 2157.631498336792,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "d8c3b2ddab5d",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T21:37:24.293017+00:00",
+  "ended": "2026-11-06T22:13:21.930851+00:00"
+}

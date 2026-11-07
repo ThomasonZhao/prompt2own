@@ -1,0 +1,18 @@
+[project]
+name = "prompt2own"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.6", "pyyaml>=6", "typer>=0.12", "python-dotenv>=1.0", "docker>=7"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pandas>=2.2", "matplotlib>=3.8", "scipy>=1.12", "statsmodels>=0.14", "jinja2>=3.1"]
+
+[tool.setuptools.packages.find]
+include = ["p2o*"]
+
+[tool.setuptools.package-data]
+p2o = ["stages/*.md"]
+
+[tool.pytest.ini_options]
+markers = ["docker: needs Docker + harness (run on the VM only)"]
+addopts = "-m 'not docker'"

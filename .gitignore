@@ -1,0 +1,22 @@
+.env
+.venv/
+.claude/
+__pycache__/
+*.egg-info/
+data/
+third_party/
+logs/
+# run outputs: only the per-run records, grade summaries, summary.csv and figures are tracked
+results/**
+!results/
+!results/summary.csv
+!results/figs/
+!results/figs/**
+!results/runs/
+!results/runs/**/
+!results/runs/**/run.json
+!results/runs/**/events.jsonl
+!results/runs/**/ledger.jsonl
+!results/grades/
+!results/grades/**/
+!results/grades/**/*.json

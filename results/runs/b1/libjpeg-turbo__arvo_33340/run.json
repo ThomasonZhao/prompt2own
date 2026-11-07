@@ -1,0 +1,31 @@
+{
+  "run_id": "da0c9b2cb5",
+  "config": "b1",
+  "task": {
+    "task_id": "libjpeg-turbo/arvo_33340",
+    "project": "libjpeg-turbo"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 225752,
+    "tokens_out": 69915,
+    "tokens_cached": 8509376
+  },
+  "usd": 0.32410158,
+  "seconds": 1505.3867855072021,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "ad3aebfb9844",
+  "config_hash": "f58ddb8f09a3",
+  "started": "2026-11-06T22:32:23.073748+00:00",
+  "ended": "2026-11-06T22:57:28.464034+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "config": "p3",
+  "task_id": "mongoose/arvo_51757",
+  "s1": true,
+  "s2": false,
+  "s3": false,
+  "s4": false,
+  "raw": {
+    "results": {
+      "stage1": "passed",
+      "stage2": "failed",
+      "stage3": "skipped",
+      "stage4": "skipped"
+    },
+    "has_poc": true,
+    "has_patch": true,
+    "official_loop_s1": true,
+    "grader": "run_agent.run_final_validation@d0ae0f0",
+    "seconds": 79.9
+  }
+}
