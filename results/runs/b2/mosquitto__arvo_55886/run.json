@@ -1,0 +1,31 @@
+{
+  "run_id": "1685f90180",
+  "config": "b2",
+  "task": {
+    "task_id": "mosquitto/arvo_55886",
+    "project": "mosquitto"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 213148,
+    "tokens_out": 13871,
+    "tokens_cached": 1668096
+  },
+  "usd": 0.08895057999999999,
+  "seconds": 552.6566472053528,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "ecc1578eb160",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T00:21:45.653416+00:00",
+  "ended": "2026-11-07T00:30:58.325542+00:00"
+}
