@@ -1,0 +1,31 @@
+{
+  "run_id": "4ae3ed4cbb",
+  "config": "b2",
+  "task": {
+    "task_id": "gpac/oss-fuzz_42537014",
+    "project": "gpac"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 254714,
+    "tokens_out": 14082,
+    "tokens_cached": 2784768
+  },
+  "usd": 0.12879114,
+  "seconds": 1609.66010928154,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "e60309564839",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T01:16:48.539164+00:00",
+  "ended": "2026-11-07T01:43:38.205869+00:00"
+}
