@@ -179,3 +179,20 @@ Done:
 Differences from the original M5 run: new host (2x vCPU); all main runs restart from scratch; the B1 runs now use the
 per-request usage fix from the start, so no B1 re-pricing is needed; no P0 main; B2 is conditional on load.
 Open: B2 launch decision; the main batches must finish before the 20:00 PT results deadline.
+
+## Recovery results — 2026-11-06 16:05 PT (Session A)
+Done: b1 and p3 main finished at 16:03 PT (started 12:05). 30/30 runs each have run_end and an official grade; no
+infra errors, none ungraded. B2 was **not run**. Load never stayed below ~28 (the 5-min average was 25-85 from 12:35 to
+14:00). At p3's rate, B2 at --parallel 2 (about 15 waves) could not have finished by 20:00, and it would have slowed p3.
+P0 skipped as instructed.
+`p2o.cli summarize` + `scripts/analyze.py results/summary.csv --out results/figs/`. Final sync -> results@86770e0.
+Headline (pooled = not representative of the benchmark): S4 b1 0.433 vs p3 0.333; FSR b1 0.400 vs p3 0.444; paired
+S4 McNemar p=0.549 (n=30). exec_poc precision 1.000 / recall 0.857; exec_patch precision 0.588 / recall 1.000.
+All 7 exec_patch false accepts pass S1-S3 and fail only S4: the patch stops the worker's own PoC, builds and
+passes tests, but the ground-truth PoC still crashes. The guard cannot see the GT PoC by design, so the patch guard
+checks "fixes my PoC", not "fixes the bug".
+Verified by: `python scripts/check_spend.py` -> sum(run usd) $11.42 vs budget $30.52. The difference is exactly the
+$19.10 lost_prior_vm_estimate carry-over (Recovery entry). Per run, ours >= OpenRouter's billed cost, so recompute_usage
+was not needed. OpenRouter's counter: $11.94 -> $21.54 (+$9.61 this session vs our $11.42).
+A partial snapshot (15:01 PT) is in results/partial/ (local only, labeled PARTIAL). Demo trace: results/demo_trace.txt.
+Open: B2/P0 main not run; the B2 comparison is missing from the main table.

@@ -1,0 +1,16 @@
+\begin{table}
+\caption{Guard final verdict vs.\ official grader over runs where the guard was reached. Stage FSR = stage claimed done and grader truth false, over stage claims.}
+\label{tab:guards}
+\begin{tabular}{llllrrrrrr}
+\toprule
+Config & Stratum & Guard & Truth & Reached & Accepts & Rejects & Precision (\%) & Recall (\%) & Stage FSR (\%) \\
+\midrule
+P3 & all & exec\_poc & S1 & 26 & 18 & 8 & 100 [82, 100] & 86 [65, 95] & 9 [2, 27] \\
+P3 & all & exec\_patch & S4 & 18 & 17 & 1 & 59 [36, 78] & 100 [72, 100] & 44 [25, 66] \\
+P3 & easy & exec\_poc & S1 & 16 & 11 & 5 & 100 [74, 100] & 92 [65, 99] & 14 [4, 40] \\
+P3 & easy & exec\_patch & S4 & 11 & 11 & 0 & 45 [21, 72] & 100 [57, 100] & 55 [28, 79] \\
+P3 & uniform & exec\_poc & S1 & 10 & 7 & 3 & 100 [65, 100] & 78 [45, 94] & 0 [0, 30] \\
+P3 & uniform & exec\_patch & S4 & 7 & 6 & 1 & 83 [44, 97] & 100 [57, 100] & 29 [8, 64] \\
+\bottomrule
+\end{tabular}
+\end{table}

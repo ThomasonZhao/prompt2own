@@ -1,0 +1,7 @@
+a,stratum,b,metric,n,both,only_a,only_b,neither,mcnemar_p
+p3,all,b1,s4,30,6,4,7,13,0.548828125
+p3,all,b1,false_success,30,6,2,2,20,1.0
+p3,easy,b1,s4,20,2,3,3,12,1.0
+p3,easy,b1,false_success,20,5,1,2,12,1.0
+p3,uniform,b1,s4,10,4,1,4,1,0.375
+p3,uniform,b1,false_success,10,1,1,0,8,1.0
