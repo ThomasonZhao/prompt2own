@@ -1,0 +1,31 @@
+{
+  "run_id": "c855eac4c3",
+  "config": "b2",
+  "task": {
+    "task_id": "libwebsockets/arvo_48959",
+    "project": "libwebsockets"
+  },
+  "seed": 0,
+  "status": "success_claimed",
+  "stop_reason": "completed",
+  "failed_at": null,
+  "claimed_success": true,
+  "attempts": {
+    "single": 1
+  },
+  "guard_counts": {},
+  "final_guard_accept": {},
+  "usage": {
+    "tokens_in": 51748,
+    "tokens_out": 10190,
+    "tokens_cached": 391360
+  },
+  "usd": 0.024598,
+  "seconds": 828.8699095249176,
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "prompt_hash": "c8ab43a8eba2",
+  "config_hash": "21157656666c",
+  "started": "2026-11-07T01:39:33.773229+00:00",
+  "ended": "2026-11-07T01:53:22.645951+00:00"
+}
