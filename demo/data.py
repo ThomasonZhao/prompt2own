@@ -264,9 +264,61 @@ def _run() -> dict:
     }
 
 
+REJECT_TASK = "htslib/arvo_18196"   # P3 PoC rejected 3x, and S1 really failed: a correct reject
+
+
+def _reject_example() -> dict:
+    """A run where the PoC guard said no and the grader agreed, next to B1's claim on the same task."""
+    d = REJECT_TASK.replace("/", "__")
+    ev = _jsonl(f"results/runs/p3/{d}/events.jsonl")
+    pocs = [{"attempt": e["attempt"], "claim_done": bool(e["claim"]["done"]),
+             "claim_conf": float(e["claim"]["confidence"]), "accept": bool(e["verdict"]["accept"]),
+             "reason": e["verdict"]["reason"]}
+            for e in ev if e["event"] == "stage_attempt" and e["stage"] == "poc"]
+    rows = _csv("results/summary.csv")
+    p3 = _one(rows, config="p3", task_id=REJECT_TASK)
+    b1 = _one(rows, config="b1", task_id=REJECT_TASK)
+    out = {"task_id": REJECT_TASK, "pocs": pocs,
+           "p3": {k: p3[k] == "1" for k in ("claimed_success", "s1", "s2", "s3", "s4")},
+           "b1": {k: b1[k] == "1" for k in ("claimed_success", "s1", "s2", "s3", "s4")}}
+    if any(p["accept"] for p in pocs) or out["p3"]["s1"]:
+        raise DataError(f"{REJECT_TASK} is no longer a correct-reject example; pick another")
+    return out
+
+
+CACHE = Path(__file__).resolve().parent / "cache"
+
+
+def _trace(config: str, task: str, width: int = 80) -> list[str]:
+    """Run the project's own scripts/trace.py on a copy of the run files, return its output lines.
+
+    results/runs is not on the code branches, so the run's events/ledger/run.json and its grade are
+    copied from the results ref into demo/cache/results/... (same layout trace.py expects).
+    """
+    d = task.replace("/", "__")
+    names = ("events.jsonl", "run.json") + (() if config in ("b1", "b2") else ("ledger.jsonl",))
+    files = [f"results/runs/{config}/{d}/{n}" for n in names]   # single-session runs have no ledger
+    files.append(f"results/grades/{config}/{d}.json")
+    for rel in files:
+        dst = CACHE / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_text(_read(rel))
+    import sys
+    out = subprocess.run([sys.executable, str(REPO / "scripts/trace.py"),
+                          str(CACHE / f"results/runs/{config}/{d}"), "--width", str(width)],
+                         check=True, capture_output=True, text=True).stdout
+    # The cache holds no PoC/patch bytes (on purpose), so trace.py would print a false
+    # "deliverables: (none)"; drop that one line rather than show it.
+    return [l for l in out.rstrip("\n").splitlines() if not l.startswith("deliverables:")]
+
+
 def load() -> dict:
     d = {"paper": _paper(), "main": _main(), "guards": _guards(), "paired": _paired(),
-         "false_accepts": _false_accepts(), "graded": _graded_runs(), "run": _run()}
+         "false_accepts": _false_accepts(), "graded": _graded_runs(), "run": _run(),
+         "reject": _reject_example()}
+    d["trace"] = {"libspng": _trace("p3", "libspng/arvo_14935"),
+                  "htslib_p3": _trace("p3", REJECT_TASK),
+                  "htslib_b1": _trace("b1", REJECT_TASK)}
     m = d["main"]
     d["handoff"] = {c: {"s1": m[c]["all"]["s1"], "s2": m[c]["all"]["s2"]} for c in MAIN_CONFIGS}
     d["provenance"] = dict(PROVENANCE)
